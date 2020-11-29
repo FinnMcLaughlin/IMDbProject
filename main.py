@@ -2,50 +2,75 @@ from imdb import IMDb
 import csv
 
 
+'''
+TODO: Add method to append new additions to list to the CSV file, without
+    the need to search each movie on the list again 
+
+def formatTitle_List(movie_title):
+    return movie_title.replace("\n", "").replace(" ", "").lower()
+
+
+def formatTitle_CSV(movie_title):
+    return movie_title.split(",")[0].replace(" ", "").lower()
+
+
 def isMovieNew(movie, csv_file):
     for existing_movies in csv_file:
-        print("|" + existing_movies.split(",")[0] + "| - |" + movie.replace("\n", "") + "|")
-        if movie.replace("\n", "").lower() == existing_movies.split(",")[0].lower():
-            print("Found: " + movie)
+
+        if formatTitle_List(movie) in formatTitle_CSV(existing_movies):
             return True
 
     return False
+'''
 
 
 def getMovies(movies):
     imdb_movies = []
 
-    csv_file = open("movie_info.csv", "r")
-
     for movie in movies:
         print("Finding: " + movie)
-        if not isMovieNew(movie, csv_file):
-            imdb_movies.append(
-                _imdb.get_movie(
-                    _imdb.search_movie(movie)[0].getID()
-                )
+        imdb_movies.append(
+            _imdb.get_movie(
+                _imdb.search_movie(movie)[0].getID()
             )
-
-    # for movie in imdb_movies:
-    #     print(movie["title"])
-    #     print(movie["languages"][:2])
-    #     print("\n")
+        )
 
     return imdb_movies
 
 
+def checkValueIsPresent(movie, key):
+    try:
+        test = movie[key]
+
+    except:
+        return "N/A"
+
+    return movie[key]
+
+
 def createCSVfile(movies):
-    with open("movie_info.csv", "a", newline="") as file:
-        headers = ["title", "year", "genre", "director", "cast", "countries"]
+    with open("movie_info.csv", "w", newline="", encoding='utf-8') as file:
+        headers = ["title", "year", "genre", "director", "cast", "countries", "rating", "languages"]
 
         writer = csv.DictWriter(file, headers)
 
         for movie in movies:
-            print(movie["title"])
-            writer.writerow({"title": movie["title"], "year": movie["year"], "genre": movie["genre"][:3],
-                             "director": movie["director"][:2], "cast": movie["cast"][:10],
-                             "countries": movie["countries"][:3]})
-            # TODO: movie["rating"] , movie["languages"]
+            try:
+                print(movie["title"])
+
+                writer.writerow({"title": checkValueIsPresent(movie, "title"),
+                                 "year": checkValueIsPresent(movie, "year"),
+                                 "genre": checkValueIsPresent(movie, "genre")[:3],
+                                 "director": checkValueIsPresent(movie, "director")[:2],
+                                 "cast": checkValueIsPresent(movie, "cast")[:10],
+                                 "countries": checkValueIsPresent(movie, "countries")[:3],
+                                 "rating": checkValueIsPresent(movie, "rating"),
+                                 "languages": checkValueIsPresent(movie, "languages")[:3]})
+
+                # TODO: movie["rating"] , movie["languages"]
+
+            except:
+                print("########\nERROR: " + movie["title"] + "\n########")
 
 
 _imdb = IMDb()

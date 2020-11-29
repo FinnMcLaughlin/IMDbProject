@@ -13,12 +13,12 @@ Underworld
 The Taking of Deborah Logan
 The Survivalist
 The Host
-Ichi the killer
+Koroshiya 1
 Barton Fink
 The Killing Joke
 The Crazies
 The lighthouse
-War of Planet of the Apes
+War for the Planet of the Apes
 Fast Times at Ridgemont High
 Jackie Brown
 The Void
@@ -45,5 +45,35 @@ Evil Dead 2
 Army of Darkness
 Evil Dead (2013)
 Free Fire
-New Mutants
 Feels Good Man
+The Terminal
+Road to Peridition
+2001: A Space Odyssey
+12 Angry Men
+Phone Booth
+Honey Boy
+High Fidelity
+Spaceballs
+You've Got Mail
+Ex Machina
+Requim for a Dream
+Almost Famous
+Lock, Stock and Two Smoking Barrels
+Nightmare on Elm Street 3: Dream Warriors
+Leon the Professional
+Hunt for the Wilderpeople
+Moonrise Kingdom
+The Royal Tenembaums
+Wall-E
+Three Billboards outside of Ebbing, Missouri
+True Romance
+Casino
+Taxi Driver
+One Flew Over the Cuckoo's Nest
+Dallas Buyers Club
+My Scientology Movie
+There Will Be Blood
+Fences
+Boyhood
+Planes, Trains & Automobiles
+Everybody Wants Some!!
