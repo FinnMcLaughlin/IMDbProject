@@ -1,6 +1,6 @@
 from imdb import IMDb
+from string import printable as pt
 import csv
-
 
 '''
 TODO: Add method to append new additions to list to the CSV file, without
@@ -24,6 +24,30 @@ def isMovieNew(movie, csv_file):
 '''
 
 
+def getIndexOfMovie_IMDbSearch(movie_title):
+    index = 0
+
+    for movie in all_imdb_movies:
+        if movie_title in movie["title"]:
+            return index
+
+        index += 1
+
+
+def getMovieTitleFromIndex(specified_index):
+    curr_index = 0
+
+    movie_list_ = open("movie_list.txt", "r")
+    print(specified_index)
+
+    for movie in movie_list_:
+        if specified_index == curr_index:
+            movie_list_.close()
+            return movie.replace("\n", "")
+
+        curr_index += 1
+
+
 def getMovies(movies):
     imdb_movies = []
 
@@ -40,7 +64,11 @@ def getMovies(movies):
 
 def checkValueIsPresent(movie, key):
     try:
-        test = movie[key]
+        type(movie[key])
+
+        if key == "title":
+            if set(movie["title"]).difference(pt):
+                return getMovieTitleFromIndex(getIndexOfMovie_IMDbSearch(movie["title"]))
 
     except:
         return "N/A"
@@ -67,8 +95,6 @@ def createCSVfile(movies):
                                  "rating": checkValueIsPresent(movie, "rating"),
                                  "languages": checkValueIsPresent(movie, "languages")[:3]})
 
-                # TODO: movie["rating"] , movie["languages"]
-
             except:
                 print("########\nERROR: " + movie["title"] + "\n########")
 
@@ -77,8 +103,11 @@ _imdb = IMDb()
 
 movie_list = open("movie_list.txt", "r")
 
-imdb_movies = getMovies(movie_list)
-createCSVfile(imdb_movies)
+all_imdb_movies = getMovies(movie_list)
+
+movie_list.close()
+
+createCSVfile(all_imdb_movies)
 
 '''
 title
