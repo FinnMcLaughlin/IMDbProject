@@ -82,6 +82,15 @@ def createCSVfile(movies):
 
         writer = csv.DictWriter(file, headers)
 
+        writer.writerow({"title": "title",
+                                 "year": "year",
+                                 "genre": "genre",
+                                 "director": "director",
+                                 "cast": "cast",
+                                 "countries": "countries",
+                                 "rating": "rating",
+                                 "languages": "languages"})
+
         for movie in movies:
             try:
                 print(movie["title"])
@@ -94,6 +103,8 @@ def createCSVfile(movies):
                                  "countries": checkValueIsPresent(movie, "countries")[:3],
                                  "rating": checkValueIsPresent(movie, "rating"),
                                  "languages": checkValueIsPresent(movie, "languages")[:3]})
+
+                # TODO: movie["duration"]
 
             except:
                 print("########\nERROR: " + movie["title"] + "\n########")
