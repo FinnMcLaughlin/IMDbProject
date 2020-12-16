@@ -129,7 +129,7 @@ static unsigned char w3_bits[] = {
 #	See the user documentation for details on what tk_messageBox does.
 #
 proc ::tk::MessageBox {args} {
-    global tcl_platform tk_strictMotif
+    global tk_strictMotif
     variable ::tk::Priv
 
     set w ::tk::PrivMsgBox
@@ -234,7 +234,8 @@ proc ::tk::MessageBox {args} {
     }
     if {!$valid} {
 	return -code error -errorcode {TK MSGBOX DEFAULT} \
-	    "invalid default button \"$data(-default)\""
+	    "bad -default value \"$data(-default)\": must be\
+	    abort, retry, ignore, ok, cancel, no, or yes"
     }
 
     # 2. Set the dialog to be a child window of $parent

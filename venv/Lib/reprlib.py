@@ -4,10 +4,7 @@ __all__ = ["Repr", "repr", "recursive_repr"]
 
 import builtins
 from itertools import islice
-try:
-    from _thread import get_ident
-except ImportError:
-    from _dummy_thread import get_ident
+from _thread import get_ident
 
 def recursive_repr(fillvalue='...'):
     'Decorator to make a repr function return fillvalue for a recursive call'
@@ -30,6 +27,7 @@ def recursive_repr(fillvalue='...'):
         wrapper.__module__ = getattr(user_function, '__module__')
         wrapper.__doc__ = getattr(user_function, '__doc__')
         wrapper.__name__ = getattr(user_function, '__name__')
+        wrapper.__qualname__ = getattr(user_function, '__qualname__')
         wrapper.__annotations__ = getattr(user_function, '__annotations__', {})
         return wrapper
 
