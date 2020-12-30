@@ -8,6 +8,8 @@ language = []
 actor = []
 director = []
 
+filters = {}
+
 button_label = "Get Movie Recommendation"
 no_data_tag = "N/A"
 
@@ -69,9 +71,19 @@ def getOptions(movie_data):
     year.sort()
     language.sort()
 
-def getRecommendation(filtered_movie_list):
-    random_index = random.randrange(0, len(filtered_movie_list.index))
-    return filtered_movie_list.loc[random_index]
+def getRecommendation(movie_list):
+    if len(filters) > 0:
+        filtered_movie_list = pd.DataFrame()
+
+        for filters_key in filters:
+            filtered_movie_list = mergeFilteredMovieList(filtered_movie_list, getFilter(filters_key, filters[filters_key], movie_list))
+
+        random_index = random.randrange(0, len(filtered_movie_list.index))
+        return filtered_movie_list.iloc[random_index]
+
+    else:
+        random_index = random.randrange(0, len(movie_list.index))
+        return movie_list.iloc[random_index]
 
 def displayRecommendation():
     st.title("Movie Recommended")
@@ -105,28 +117,47 @@ def formatArrayToString(data_array):
 
     return formatted_string[:-2]
 
+def getFilter(key, value, dataframe):
+    if value == "genre":
+        return dataframe[dataframe.genre.str.contains(key)]
+    '''
+    if value == "year":
+        return dataframe[dataframe.year.str.contains(key)]
+    if value == "languages":
+        return dataframe[dataframe.languages.str.contains(key)]
+    '''
+
+def mergeFilteredMovieList(filtered_movie_list, new_movie_list):
+    if len(filtered_movie_list.index) > 0:
+        return pd.merge(filtered_movie_list, new_movie_list, on=list(filtered_movie_list.columns.values), how="inner")
+    else:
+        return new_movie_list
+
 movies = pd.read_csv("movie_info.csv")
 getOptions(movies)
+
+getRecommendation(movies)
 
 st.sidebar.title("Genre(s)")
 for g in genre:
     if not g == no_data_tag:
-        st.sidebar.checkbox(label=str(g), key=g, value=False)
+        if st.sidebar.checkbox(label=str(g), key=g, value=False):
+            filters[g] = "genre"
+
 st.sidebar.title("Year")
 for y in year:
     if not y == no_data_tag:
-        st.sidebar.checkbox(label=str(y), key=y, value=False)
+        if st.sidebar.checkbox(label=str(y), key=y, value=False):
+            filters[y] = "year"
+
 st.sidebar.title("Languages")
 for l in language:
     if not l == no_data_tag:
-        st.sidebar.checkbox(label=str(l), key=l, value=False)
+        if st.sidebar.checkbox(label=str(l), key=l, value=False):
+            filters[l] = "languages"
 
 if st.button(button_label):
     displayRecommendation()
-
-
-
-
 
 #st.write(movies[movies.genre.str.contains('Horror')])
 
