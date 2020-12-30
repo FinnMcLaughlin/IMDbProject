@@ -9,11 +9,12 @@ actor = []
 director = []
 
 button_label = "Get Movie Recommendation"
+no_data_tag = "N/A"
 
 def splitData(column, data):
     data_array = []
 
-    if column == "genre" or column == "languages":
+    if column == "genre":
         for item in data.split(","):
             data_array.append(item.replace("'", "").replace("[", "").replace("]", "").replace(" ", ""))
 
@@ -21,6 +22,15 @@ def splitData(column, data):
     if column == "actor" or column == "director":
         for item in data.split(","):
             data_array.append(item.split("_")[1])
+
+    if column == "languages":
+        if not type(data) is str:
+            data_array.append(no_data_tag)
+        elif len(data.split(",")) > 1:
+            for item in data.split(","):
+                data_array.append(item.replace("'", "").replace("[", "").replace("]", "").replace(" ", ""))
+        else:
+            data_array.append(data.replace("'", "").replace("[", "").replace("]", "").replace(" ", ""))
 
     return data_array
 
@@ -40,7 +50,7 @@ def getOptions(movie_data):
             if not isPresent(genre, g):
                 genre.append(g)
 
-        language_data = splitData("language", movie_data["languages"][ind])
+        language_data = splitData("languages", movie_data["languages"][ind])
         for l in language_data:
             if not isPresent(language, l):
                 language.append(l)
@@ -57,6 +67,7 @@ def getOptions(movie_data):
 
     genre.sort()
     year.sort()
+    language.sort()
 
 def getRecommendation(filtered_movie_list):
     random_index = random.randrange(0, len(filtered_movie_list.index))
@@ -85,7 +96,7 @@ def displayRecommendation():
     st.subheader(formatArrayToString(splitData("director", recommendation.director)))
 
     st.header("Language")
-    st.subheader(str(recommendation.languages))
+    st.subheader(formatArrayToString(splitData("languages", recommendation.languages)))
 
 def formatArrayToString(data_array):
     formatted_string = ""
@@ -97,13 +108,18 @@ def formatArrayToString(data_array):
 movies = pd.read_csv("movie_info.csv")
 getOptions(movies)
 
-
 st.sidebar.title("Genre(s)")
 for g in genre:
-    st.sidebar.checkbox(label=str(g), key=g, value=False)
+    if not g == no_data_tag:
+        st.sidebar.checkbox(label=str(g), key=g, value=False)
 st.sidebar.title("Year")
 for y in year:
-    st.sidebar.checkbox(label=str(y), key=y, value=False)
+    if not y == no_data_tag:
+        st.sidebar.checkbox(label=str(y), key=y, value=False)
+st.sidebar.title("Languages")
+for l in language:
+    if not l == no_data_tag:
+        st.sidebar.checkbox(label=str(l), key=l, value=False)
 
 if st.button(button_label):
     displayRecommendation()
