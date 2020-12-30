@@ -1,11 +1,14 @@
 import pandas as pd
 import streamlit as st
+import random
 
 year = []
 genre = []
 language = []
 actor = []
 director = []
+
+button_label = "Get Movie Recommendation"
 
 def splitData(column, data):
     data_array = []
@@ -55,17 +58,59 @@ def getOptions(movie_data):
     genre.sort()
     year.sort()
 
+def getRecommendation(filtered_movie_list):
+    random_index = random.randrange(0, len(filtered_movie_list.index))
+    return filtered_movie_list.loc[random_index]
+
+def displayRecommendation():
+    st.title("Movie Recommended")
+    recommendation = getRecommendation(movies)
+
+    st.header("Title")
+    st.subheader(recommendation.title)
+
+    st.header("Year")
+    st.subheader(str(recommendation.year))
+
+    st.header("Rating")
+    st.subheader(str(recommendation.rating))
+
+    st.header("Genre")
+    st.subheader(formatArrayToString(splitData("genre", recommendation.genre)))
+
+    st.header("Cast")
+    st.subheader(formatArrayToString(splitData("actor", recommendation.cast)))
+
+    st.header("Director")
+    st.subheader(formatArrayToString(splitData("director", recommendation.director)))
+
+    st.header("Language")
+    st.subheader(str(recommendation.languages))
+
+def formatArrayToString(data_array):
+    formatted_string = ""
+    for data in data_array:
+        formatted_string = formatted_string + data + ", "
+
+    return formatted_string[:-2]
+
 movies = pd.read_csv("movie_info.csv")
-#print(movies[movies.genre.str.contains('Horror')])
 getOptions(movies)
 
 
-st.title("Title")
 st.sidebar.title("Genre(s)")
 for g in genre:
     st.sidebar.checkbox(label=str(g), key=g, value=False)
 st.sidebar.title("Year")
 for y in year:
     st.sidebar.checkbox(label=str(y), key=y, value=False)
+
+if st.button(button_label):
+    displayRecommendation()
+
+
+
+
+
 #st.write(movies[movies.genre.str.contains('Horror')])
 
