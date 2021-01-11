@@ -1,6 +1,11 @@
 from imdb import IMDb
+import imdb.helpers
+import urllib.request
 from string import printable as pt
 import csv
+import os
+
+curr_directory_path = os.getcwd()
 
 '''
 TODO: Add method to append new additions to list to the CSV file, without
@@ -51,13 +56,30 @@ def getMovieTitleFromIndex(specified_index):
 def getMovies(movies):
     imdb_movies = []
 
+    index = 0
+
     for movie in movies:
         print("Finding: " + movie)
-        imdb_movies.append(
-            _imdb.get_movie(
+        imdb_movie = _imdb.get_movie(
                 _imdb.search_movie(movie)[0].getID()
             )
-        )
+
+        if set(imdb_movie["title"]).difference(pt):
+            print("Title Reverted")
+            imdb_movie["title"] = getMovieTitleFromIndex(index)
+
+        if not checkPosterIsPresent(imdb_movie["title"]):
+            if imdb_movie["title"][0].isdigit():
+                folder_path = "movie_posters\#\\" + imdb_movie["title"] + ".jpg"
+            else:
+                folder_path = "movie_posters\\" + imdb_movie["title"][0].upper() + "\\" + imdb_movie["title"] + ".jpg"
+
+            urllib.request.urlretrieve(imdb.helpers.fullSizeCoverURL(imdb_movie), folder_path)
+
+        else:
+            print(imdb_movie["title"] + " poster found")
+
+        imdb_movies.append(imdb_movie)
 
     return imdb_movies
 
@@ -74,6 +96,20 @@ def checkValueIsPresent(movie, key):
         return "N/A"
 
     return movie[key]
+
+
+def checkPosterIsPresent(movie_title):
+    print(movie_title)
+    poster_folder_path = os.path.join(curr_directory_path, "movie_posters", movie_title[0].upper())
+    print(poster_folder_path)
+
+    try:
+        poster_ = open(os.path.join(poster_folder_path, movie_title + ".jpg"))
+        poster_.close()
+        return True
+
+    except IOError:
+        return False
 
 
 def createCSVfile(movies):
@@ -111,6 +147,21 @@ def createCSVfile(movies):
 
 
 _imdb = IMDb()
+
+'''
+title = "Coherence"
+
+movie = _imdb.get_movie(
+    _imdb.search_movie(title)[0].getID()
+)
+
+if not checkPosterIsPresent(title):
+    urllib.request.urlretrieve(imdb.helpers.fullSizeCoverURL(movie), "movie_posters\\"
+                               + title[0].upper() + "\\" + title + ".jpg")
+    #urllib.request.urlretrieve(imdb.helpers.fullSizeCoverURL(movie), "movie_posters\#\\" + title + ".jpg")
+else:
+    print("Poster already present")
+'''
 
 movie_list = open("../../Documents/Movie_List.txt", "r")
 

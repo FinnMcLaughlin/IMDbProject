@@ -1,6 +1,8 @@
 import pandas as pd
 import streamlit as st
+from PIL import Image
 import random
+import os
 
 # Array for all filter options that will be displayed on sidebar
 year = []
@@ -80,6 +82,18 @@ def getOptions(movie_data):
     year.sort()
     language.sort()
 
+# Function to get the poster of the recommended movie from the movie poster folder
+def getMoviePoster(movie_title):
+    if movie_title[0].isdigit():
+        poster_file_path = os.path.join(os.getcwd(), "movie_posters", "#", movie_title + ".jpg")
+    else:
+        poster_file_path = os.path.join(os.getcwd(), "movie_posters", movie_title[0].upper(), movie_title + ".jpg")
+
+    Image.MAX_IMAGE_PIXELS = None
+    poster_file = Image.open(poster_file_path)
+
+    return poster_file
+
 # Function to get a dataframe of potentially recommended movies, including filters if applicable
 def getRecommendation(movie_list):
     if len(filters) > 0:
@@ -99,6 +113,11 @@ def getRecommendation(movie_list):
 def displayRecommendation():
     st.title("Movie Recommended")
     recommendation = getRecommendation(movies)
+
+    # Title printed for image debug purposes
+    st.write(recommendation.title)
+
+    st.image(getMoviePoster(recommendation.title), "Poster for " + recommendation.title, use_column_width=True)
 
     st.header("Title")
     st.subheader(recommendation.title)
@@ -129,7 +148,7 @@ def formatArrayToString(data_array):
 
     return formatted_string[:-2]
 
-# Function to return
+# Function to return dataframe based on filter option
 def getFilter(key, value, dataframe):
     # TODO: - Add an OR condition for actors, directors etc.
     if value == "genre":
@@ -147,6 +166,7 @@ def getFilter(key, value, dataframe):
     if value == "languages":
         return dataframe[dataframe.languages.str.contains(key, na=False)]
 
+# Function to merge each filtered dataframes
 def mergeFilteredMovieList(filtered_movie_list, new_movie_list):
     if len(filtered_movie_list.index) > 0:
         return pd.merge(filtered_movie_list, new_movie_list, on=list(filtered_movie_list.columns.values), how="inner")
@@ -161,8 +181,7 @@ movies = pd.read_csv("movie_info.csv")
 getOptions(movies)
 
 # Recommendation function request for testing purposes
-getRecommendation(movies)
-
+#getRecommendation(movies)
 
 # Streamlit code for the sidebar where users can add filters to their movie recommendations
 # Each filter options have a title and are taken from their respective arrays that were populated from
@@ -171,24 +190,15 @@ getRecommendation(movies)
 # When a checkbox is chosen, the data is added to the filters dictionary
 # TODO: - Add drop downs for each sidebar options
 # TODO: - Include Actors images
+
+if st.button(button_label):
+    displayRecommendation()
+
 st.sidebar.title("Genre(s)")
 for g in genre:
     if not g == no_data_tag:
         if st.sidebar.checkbox(label=str(g), key=g, value=False):
             filters[g] = "genre"
-
-st.sidebar.title("Director(s)")
-for d in director:
-    if not d == no_data_tag:
-        if st.sidebar.checkbox(label=str(d), key=d, value=False):
-            filters[d] = "director"
-
-
-#st.sidebar.title("Actor(s)")
-#for a in actor:
-#    if not a == no_data_tag:
-#        if st.sidebar.checkbox(label=str(a), key=a, value=False):
-#            filters[a] = "actor"
 
 st.sidebar.title("Year")
 for y in year:
@@ -202,7 +212,16 @@ for l in language:
         if st.sidebar.checkbox(label=str(l), key=l, value=False):
             filters[l] = "languages"
 
-if st.button(button_label):
-    displayRecommendation()
+# st.sidebar.title("Director(s)")
+# for d in director:
+#    if not d == no_data_tag:
+#        if st.sidebar.checkbox(label=str(d), key=d, value=False):
+#            filters[d] = "director"
+
+#st.sidebar.title("Actor(s)")
+#for a in actor:
+#    if not a == no_data_tag:
+#        if st.sidebar.checkbox(label=str(a), key=a, value=False):
+#            filters[a] = "actor"
 
 #st.write(movies[movies.genre.str.contains('Horror')])
