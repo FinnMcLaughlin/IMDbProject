@@ -11,11 +11,18 @@ language = []
 actor = []
 director = []
 
+# Array to keep track of previously recommended indexes to avoid repeat recommendations
+global used_index
+
 # Dictionary to handle all active filters
 filters = {}
 
 button_label = "Get Movie Recommendation"
 no_data_tag = "N/A"
+
+@st.cache(allow_output_mutation=True)
+def initializeUsedIndexArray():
+    return []
 
 # Some of the panda dataframe columns have arrays as type object, and so the data must be
 # split manually based on the column
@@ -94,6 +101,29 @@ def getMoviePoster(movie_title):
 
     return poster_file
 
+# Function to insert used index into array
+def insertIntoUsedIndexArray(index):
+    print("Adding: " + str(index) + " into array")
+    used_index.append(index)
+    print(used_index)
+
+# Clears contents of used index array
+def resetUsedIndexArray():
+    print("Cleared")
+    used_index.clear()
+
+# Function to get random index from given dataset
+def getRandomIndex(movie_list, attempt_count):
+    rand_index = random.randrange(0, len(movie_list.index))
+
+    print("Attempt Count : " + str(attempt_count))
+
+    if rand_index in used_index and attempt_count < 25:
+        getRandomIndex(movie_list, attempt_count + 1)
+    else:
+        print("----------------------------\n\n")
+        return rand_index
+
 # Function to get a dataframe of potentially recommended movies, including filters if applicable
 def getRecommendation(movie_list):
     if len(filters) > 0:
@@ -102,17 +132,21 @@ def getRecommendation(movie_list):
         for filters_key in filters:
             filtered_movie_list = mergeFilteredMovieList(filtered_movie_list, getFilter(filters_key, filters[filters_key], movie_list))
 
-        random_index = random.randrange(0, len(filtered_movie_list.index))
+        random_index = getRandomIndex(filtered_movie_list, 0)
+        insertIntoUsedIndexArray(random_index)
         return filtered_movie_list.iloc[random_index]
 
     else:
-        random_index = random.randrange(0, len(movie_list.index))
+        random_index = getRandomIndex(movie_list, 0)
+        insertIntoUsedIndexArray(random_index)
         return movie_list.iloc[random_index]
 
 # Function to display the recommendation information using streamline
 def displayRecommendation():
     st.title("Movie Recommended")
     recommendation = getRecommendation(movies)
+
+    st.write(used_index)
 
     # Title printed for image debug purposes
     st.write(recommendation.title)
@@ -175,13 +209,15 @@ def mergeFilteredMovieList(filtered_movie_list, new_movie_list):
 
 # Reads in movie data from csv file
 movies = pd.read_csv("movie_info.csv")
-#print(movies.loc[movies.year == 1991])
 
 # Extracts the filter options for the sidebar from the csv file and stores them in their respective arrays
 getOptions(movies)
 
 # Recommendation function request for testing purposes
 #getRecommendation(movies)
+
+# TODO: Reset used_index array when filter option changes
+used_index = initializeUsedIndexArray()
 
 # Streamlit code for the sidebar where users can add filters to their movie recommendations
 # Each filter options have a title and are taken from their respective arrays that were populated from
@@ -191,8 +227,6 @@ getOptions(movies)
 # TODO: - Add drop downs for each sidebar options
 # TODO: - Include Actors images
 
-if st.button(button_label):
-    displayRecommendation()
 
 st.sidebar.title("Genre(s)")
 for g in genre:
@@ -212,6 +246,9 @@ for l in language:
         if st.sidebar.checkbox(label=str(l), key=l, value=False):
             filters[l] = "languages"
 
+if st.button(button_label):
+    displayRecommendation()
+
 # st.sidebar.title("Director(s)")
 # for d in director:
 #    if not d == no_data_tag:
@@ -225,3 +262,4 @@ for l in language:
 #            filters[a] = "actor"
 
 #st.write(movies[movies.genre.str.contains('Horror')])
+#print(movies.loc[movies.year == 1991])

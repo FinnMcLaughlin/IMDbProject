@@ -59,7 +59,7 @@ def getMovies(movies):
     index = 0
 
     for movie in movies:
-        print("Finding: " + movie)
+        print("\n-------\nFinding: " + movie)
         imdb_movie = _imdb.get_movie(
                 _imdb.search_movie(movie)[0].getID()
             )
@@ -81,6 +81,8 @@ def getMovies(movies):
 
         imdb_movies.append(imdb_movie)
 
+        index += 1
+
     return imdb_movies
 
 
@@ -99,9 +101,7 @@ def checkValueIsPresent(movie, key):
 
 
 def checkPosterIsPresent(movie_title):
-    print(movie_title)
     poster_folder_path = os.path.join(curr_directory_path, "movie_posters", movie_title[0].upper())
-    print(poster_folder_path)
 
     try:
         poster_ = open(os.path.join(poster_folder_path, movie_title + ".jpg"))
