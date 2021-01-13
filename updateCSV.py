@@ -1,4 +1,5 @@
 from imdb import IMDb
+import pandas as pd
 import imdb.helpers
 import urllib.request
 from string import printable as pt
@@ -6,6 +7,7 @@ import csv
 import os
 
 curr_directory_path = os.getcwd()
+last_updated_list_array = []
 
 '''
 TODO: Add method to append new additions to list to the CSV file, without
@@ -28,7 +30,7 @@ def isMovieNew(movie, csv_file):
     return False
 '''
 
-
+# Function to get the index of a movie in the imdb_movie_list based on it's title
 def getIndexOfMovie_IMDbSearch(movie_title):
     index = 0
 
@@ -38,7 +40,7 @@ def getIndexOfMovie_IMDbSearch(movie_title):
 
         index += 1
 
-
+# Function to get the movie title from the original movie list based on a specified index
 def getMovieTitleFromIndex(specified_index):
     curr_index = 0
 
@@ -52,40 +54,41 @@ def getMovieTitleFromIndex(specified_index):
 
         curr_index += 1
 
-
+# Function to get imdb movie data based on the given movie list
 def getMovies(movies):
     imdb_movies = []
 
     index = 0
 
     for movie in movies:
-        print("\n-------\nFinding: " + movie)
-        imdb_movie = _imdb.get_movie(
-                _imdb.search_movie(movie)[0].getID()
-            )
+        if not checkForUpdateInList(movie):
+            print("\n-------\nFinding: " + movie)
+            imdb_movie = _imdb.get_movie(
+                    _imdb.search_movie(movie)[0].getID()
+                )
 
-        if set(imdb_movie["title"]).difference(pt):
-            print("Title Reverted")
-            imdb_movie["title"] = getMovieTitleFromIndex(index)
+            if set(imdb_movie["title"]).difference(pt):
+                print("Title Reverted")
+                imdb_movie["title"] = getMovieTitleFromIndex(index)
 
-        if not checkPosterIsPresent(imdb_movie["title"]):
-            if imdb_movie["title"][0].isdigit():
-                folder_path = "movie_posters\#\\" + imdb_movie["title"] + ".jpg"
+            if not checkPosterIsPresent(imdb_movie["title"]):
+                if imdb_movie["title"][0].isdigit():
+                    folder_path = "movie_posters\#\\" + imdb_movie["title"] + ".jpg"
+                else:
+                    folder_path = "movie_posters\\" + imdb_movie["title"][0].upper() + "\\" + imdb_movie["title"] + ".jpg"
+
+                urllib.request.urlretrieve(imdb.helpers.fullSizeCoverURL(imdb_movie), folder_path)
+
             else:
-                folder_path = "movie_posters\\" + imdb_movie["title"][0].upper() + "\\" + imdb_movie["title"] + ".jpg"
+                print(imdb_movie["title"] + " poster found")
 
-            urllib.request.urlretrieve(imdb.helpers.fullSizeCoverURL(imdb_movie), folder_path)
+            imdb_movies.append(imdb_movie)
 
-        else:
-            print(imdb_movie["title"] + " poster found")
-
-        imdb_movies.append(imdb_movie)
-
-        index += 1
+            index += 1
 
     return imdb_movies
 
-
+# Function to check if the value is present, if not replaces the value with standardised "N/A"
 def checkValueIsPresent(movie, key):
     try:
         type(movie[key])
@@ -99,7 +102,7 @@ def checkValueIsPresent(movie, key):
 
     return movie[key]
 
-
+# Function to check if poster has already been downloaded based on the given movie title
 def checkPosterIsPresent(movie_title):
     poster_folder_path = os.path.join(curr_directory_path, "movie_posters", movie_title[0].upper())
 
@@ -111,21 +114,48 @@ def checkPosterIsPresent(movie_title):
     except IOError:
         return False
 
+# Function to check if a given movie title is present in the last updated list text file
+# If so, it is removed from the array
+def checkForUpdateInList(movie_title):
+    if movie_title in last_updated_list_array:
+        last_updated_list_array.remove(movie_title)
+        return True
 
+    else:
+        return False
+
+#def updateRemovedItems():
+    #for
+
+# Function to populate an array with the contents of the last updated movies text file
+def populateLastUpdatedArray(last_updated_file):
+    for column in last_updated_file:
+        last_updated_list_array.append(column)
+
+# Function to update the last updated movies text file to most recent version
+def updateLastUpdatedMovieList(last_updated_list, most_recent_list):
+    print("Last Updated List Array: ")
+    for movie in last_updated_list_array:
+        print(movie)
+    print("-------------------------")
+    #for line in most_recent_list:
+    #    last_updated_list.write(line)
+
+# Function to create a CSV file with the given imdb movie data
 def createCSVfile(movies):
-    with open("movie_info.csv", "w", newline="", encoding='utf-8') as file:
+    with open("movie_info.csv", "a", newline="", encoding='utf-8') as file:
         headers = ["title", "year", "genre", "director", "cast", "countries", "rating", "languages"]
 
         writer = csv.DictWriter(file, headers)
 
-        writer.writerow({"title": "title",
+        '''writer.writerow({"title": "title",
                                  "year": "year",
                                  "genre": "genre",
                                  "director": "director",
                                  "cast": "cast",
                                  "countries": "countries",
                                  "rating": "rating",
-                                 "languages": "languages"})
+                                 "languages": "languages"})'''
 
         for movie in movies:
             try:
@@ -148,24 +178,15 @@ def createCSVfile(movies):
 
 _imdb = IMDb()
 
-'''
-title = "Coherence"
-
-movie = _imdb.get_movie(
-    _imdb.search_movie(title)[0].getID()
-)
-
-if not checkPosterIsPresent(title):
-    urllib.request.urlretrieve(imdb.helpers.fullSizeCoverURL(movie), "movie_posters\\"
-                               + title[0].upper() + "\\" + title + ".jpg")
-    #urllib.request.urlretrieve(imdb.helpers.fullSizeCoverURL(movie), "movie_posters\#\\" + title + ".jpg")
-else:
-    print("Poster already present")
-'''
-
 movie_list = open("../../Documents/Movie_List.txt", "r")
 
+last_updated_movie_list = open("last_updated_list.txt", "r")
+
+populateLastUpdatedArray(last_updated_movie_list)
+
 all_imdb_movies = getMovies(movie_list)
+
+updateLastUpdatedMovieList(last_updated_movie_list, movie_list)
 
 movie_list.close()
 
