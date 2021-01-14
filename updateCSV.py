@@ -9,6 +9,13 @@ import os
 curr_directory_path = os.getcwd()
 last_updated_list_array = []
 
+CSV_file = "movie_info.csv"
+movie_list_file = "../../Documents/Movie_List.txt"
+# CSV_file = "temp_movie_info.csv"
+#movie_list_file = "temp_movie_list.txt"
+
+last_updated_list_file = "last_updated_list.txt"
+
 '''
 TODO: Add method to append new additions to list to the CSV file, without
     the need to search each movie on the list again 
@@ -44,7 +51,7 @@ def getIndexOfMovie_IMDbSearch(movie_title):
 def getMovieTitleFromIndex(specified_index):
     curr_index = 0
 
-    movie_list_ = open("../../Documents/Movie_List.txt", "r")
+    movie_list_ = open(movie_list_file, "r")
     print(specified_index)
 
     for movie in movie_list_:
@@ -124,42 +131,32 @@ def checkForUpdateInList(movie_title):
     else:
         return False
 
-#def updateRemovedItems():
-    #for
-
 # Function to populate an array with the contents of the last updated movies text file
 def populateLastUpdatedArray(last_updated_file):
     for column in last_updated_file:
         last_updated_list_array.append(column)
 
 # Function to update the last updated movies text file to most recent version
-def updateLastUpdatedMovieList(last_updated_list, most_recent_list):
-    print("Last Updated List Array: ")
-    for movie in last_updated_list_array:
-        print(movie)
-    print("-------------------------")
-    #for line in most_recent_list:
-    #    last_updated_list.write(line)
+def updateLastUpdatedMovieList(most_recent_list):
+    most_recent_list.seek(0)
+
+    last_updated_list = open(last_updated_list_file, "w")
+
+    for line in most_recent_list:
+        last_updated_list.write(line)
+
+    last_updated_list.close()
 
 # Function to create a CSV file with the given imdb movie data
-def createCSVfile(movies):
-    with open("movie_info.csv", "a", newline="", encoding='utf-8') as file:
+def appendToCSVfile(movies):
+    with open(CSV_file, "a", newline="", encoding='utf-8') as file:
         headers = ["title", "year", "genre", "director", "cast", "countries", "rating", "languages"]
 
         writer = csv.DictWriter(file, headers)
 
-        '''writer.writerow({"title": "title",
-                                 "year": "year",
-                                 "genre": "genre",
-                                 "director": "director",
-                                 "cast": "cast",
-                                 "countries": "countries",
-                                 "rating": "rating",
-                                 "languages": "languages"})'''
-
         for movie in movies:
             try:
-                print(movie["title"])
+                print("Appending " + movie["title"])
 
                 writer.writerow({"title": checkValueIsPresent(movie, "title"),
                                  "year": checkValueIsPresent(movie, "year"),
@@ -175,22 +172,59 @@ def createCSVfile(movies):
             except:
                 print("########\nERROR: " + movie["title"] + "\n########")
 
+# Function to remove any movie from the CSV file that is no longer present in the movie text file
+def removeFromCSVfile():
+    tempCSV = pd.read_csv(CSV_file)
+
+    with open(CSV_file, "w", newline="", encoding='utf-8') as file:
+        headers = ["title", "year", "genre", "director", "cast", "countries", "rating", "languages"]
+
+        writer = csv.DictWriter(file, headers)
+
+        writer.writerow({"title": "title",
+                         "year": "year",
+                         "genre": "genre",
+                         "director": "director",
+                         "cast": "cast",
+                         "countries": "countries",
+                         "rating": "rating",
+                         "languages": "languages"})
+
+        for index in tempCSV.index:
+            title = str(tempCSV["title"][index]) +"\n"
+            title_year = str(tempCSV["title"][index]) + " (" + str(tempCSV["year"][index]) + ")\n"
+
+            if not title in last_updated_list_array and not title_year in last_updated_list_array:
+                writer.writerow({"title": tempCSV["title"][index],
+                                 "year": tempCSV["year"][index],
+                                 "genre": tempCSV["genre"][index],
+                                 "director": tempCSV["director"][index],
+                                 "cast": tempCSV["cast"][index],
+                                 "countries": tempCSV["countries"][index],
+                                 "rating": tempCSV["rating"][index],
+                                 "languages": tempCSV["languages"][index]})
+
+            else:
+                print("Removing: " + title_year)
 
 _imdb = IMDb()
 
-movie_list = open("../../Documents/Movie_List.txt", "r")
-
-last_updated_movie_list = open("last_updated_list.txt", "r")
+movie_list = open(movie_list_file, "r")
+last_updated_movie_list = open(last_updated_list_file, "r")
 
 populateLastUpdatedArray(last_updated_movie_list)
-
 all_imdb_movies = getMovies(movie_list)
 
-updateLastUpdatedMovieList(last_updated_movie_list, movie_list)
+last_updated_movie_list.close()
+
+updateLastUpdatedMovieList(movie_list)
 
 movie_list.close()
 
-createCSVfile(all_imdb_movies)
+appendToCSVfile(all_imdb_movies)
+
+if len(last_updated_list_array) > 0:
+    removeFromCSVfile()
 
 '''
 title
