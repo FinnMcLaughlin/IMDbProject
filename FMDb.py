@@ -60,13 +60,13 @@ def isPresent(array, item):
 # Function to populate the filter lists based on the csv file data
 def getOptions(movie_data):
     for ind in movie_data.index:
-        if not isPresent(year, movie_data["year"][ind]):
-            year.append(movie_data["year"][ind])
-
         genre_data = splitData("genre", movie_data["genre"][ind])
         for g in genre_data:
             if not isPresent(genre, g):
                 genre.append(g)
+
+        if not isPresent(year, movie_data["year"][ind]):
+            year.append(movie_data["year"][ind])
 
         language_data = splitData("languages", movie_data["languages"][ind])
         for l in language_data:
@@ -103,13 +103,10 @@ def getMoviePoster(movie_title):
 
 # Function to insert used index into array
 def insertIntoUsedIndexArray(index):
-    print("Adding: " + str(index) + " into array")
     used_index.append(index)
-    print(used_index)
 
 # Clears contents of used index array
 def resetUsedIndexArray():
-    print("Cleared")
     used_index.clear()
 
 # Function to get random index from given dataset
@@ -203,63 +200,52 @@ def getFilter(key, value, dataframe):
 # Function to merge each filtered dataframes
 def mergeFilteredMovieList(filtered_movie_list, new_movie_list):
     if len(filtered_movie_list.index) > 0:
-        return pd.merge(filtered_movie_list, new_movie_list, on=list(filtered_movie_list.columns.values), how="inner")
+        return pd.merge(filtered_movie_list, new_movie_list, on=list(filtered_movie_list.columns.values), how="outer")
     else:
         return new_movie_list
 
-# Reads in movie data from csv file
-movies = pd.read_csv("movie_info.csv")
 
-# Extracts the filter options for the sidebar from the csv file and stores them in their respective arrays
-getOptions(movies)
+if __name__ == "__main__":
+    # Reads in movie data from csv file
+    movies = pd.read_csv("movie_info.csv")
 
-# Recommendation function request for testing purposes
-#getRecommendation(movies)
+    # Extracts the filter options for the sidebar from the csv file and stores them in their respective arrays
+    getOptions(movies)
 
-# TODO: Reset used_index array when filter option changes
-used_index = initializeUsedIndexArray()
+    # Recommendation function request for testing purposes
+    #getRecommendation(movies)
 
-# Streamlit code for the sidebar where users can add filters to their movie recommendations
-# Each filter options have a title and are taken from their respective arrays that were populated from
-# the CSV file previously.
-#
-# When a checkbox is chosen, the data is added to the filters dictionary
-# TODO: - Add drop downs for each sidebar options
-# TODO: - Include Actors images
+    # Streamlit code for the sidebar where users can add filters to their movie recommendations
+    # Each filter options have a title and are taken from their respective arrays that were populated from
+    # the CSV file previously.
+    #
+    # When a checkbox is chosen, the data is added to the filters dictionary
+    # TODO: - Add drop downs for each sidebar options
+    # TODO: - Include Actors images
 
+    st.sidebar.title("Genre(s)")
+    for g in genre:
+        if not g == no_data_tag:
+            if st.sidebar.checkbox(label=str(g), key=g, value=False):
+                filters[g] = "genre"
 
-st.sidebar.title("Genre(s)")
-for g in genre:
-    if not g == no_data_tag:
-        if st.sidebar.checkbox(label=str(g), key=g, value=False):
-            filters[g] = "genre"
+    st.sidebar.title("Year")
+    for y in year:
+        if not y == no_data_tag:
+            if st.sidebar.checkbox(label=str(y), key=y, value=False):
+                filters[y] = "year"
 
-st.sidebar.title("Year")
-for y in year:
-    if not y == no_data_tag:
-        if st.sidebar.checkbox(label=str(y), key=y, value=False):
-            filters[y] = "year"
+    st.sidebar.title("Languages")
+    for l in language:
+        if not l == no_data_tag:
+            if st.sidebar.checkbox(label=str(l), key=l, value=False):
+                filters[l] = "languages"
 
-st.sidebar.title("Languages")
-for l in language:
-    if not l == no_data_tag:
-        if st.sidebar.checkbox(label=str(l), key=l, value=False):
-            filters[l] = "languages"
+    # TODO: Reset used_index array when filter option changes
+    used_index = initializeUsedIndexArray()
 
-if st.button(button_label):
-    displayRecommendation()
+    if st.button(button_label):
+        displayRecommendation()
 
-# st.sidebar.title("Director(s)")
-# for d in director:
-#    if not d == no_data_tag:
-#        if st.sidebar.checkbox(label=str(d), key=d, value=False):
-#            filters[d] = "director"
-
-#st.sidebar.title("Actor(s)")
-#for a in actor:
-#    if not a == no_data_tag:
-#        if st.sidebar.checkbox(label=str(a), key=a, value=False):
-#            filters[a] = "actor"
-
-#st.write(movies[movies.genre.str.contains('Horror')])
-#print(movies.loc[movies.year == 1991])
+    #st.write(movies[movies.genre.str.contains('Horror')])
+    #print(movies.loc[movies.year == 1991])
