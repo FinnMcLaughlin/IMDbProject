@@ -15,7 +15,11 @@ director = []
 global used_index
 
 # Dictionary to handle all active filters
-filters = {}
+filters = {
+    "genre": [],
+    "year": [],
+    "languages": []
+}
 
 button_label = "Get Movie Recommendation"
 no_data_tag = "N/A"
@@ -184,20 +188,19 @@ def getRecommendation(movie_list):
 
     TODO: a complete rework of this function is necessary, as it currently deals with only AND logic when dealing with more than one filter
     """
-    if len(filters) > 0:
+    filtered_movie_list = movie_list
+
+    if len(filters["genre"]) > 0 or len(filters["year"]) > 0 or len(filters["languages"]) > 0:
         filtered_movie_list = pd.DataFrame()
 
-        for filters_key in filters:
-            filtered_movie_list = mergeFilteredMovieList(filtered_movie_list, getFilter(filters_key, filters[filters_key], movie_list))
+        for key in filters:
+            if len(filters[key]) > 0:
+                for filter_option in filters[key]:
+                    filtered_movie_list = mergeFilteredMovieList(filtered_movie_list, getFilter(key, filter_option, movie_list))
 
-        random_index = getRandomIndex(filtered_movie_list, 0)
-        insertIntoUsedIndexArray(random_index)
-        return filtered_movie_list.iloc[random_index]
-
-    else:
-        random_index = getRandomIndex(movie_list, 0)
-        insertIntoUsedIndexArray(random_index)
-        return movie_list.iloc[random_index]
+    random_index = getRandomIndex(filtered_movie_list, 0)
+    insertIntoUsedIndexArray(random_index)
+    return movie_list.iloc[random_index]
 
 def displayRecommendation():
     """
@@ -249,7 +252,7 @@ def formatArrayToString(data_array):
 
     return formatted_string[:-2]
 
-def getFilter(filter_value, filter_key, dataframe):
+def getFilter(filter_key, filter_value, dataframe):
     """
     Function to return a filtered data frame based on the given filter option
 
@@ -312,19 +315,19 @@ if __name__ == "__main__":
     for g in genre:
         if not g == no_data_tag:
             if st.sidebar.checkbox(label=str(g), key=g, value=False):
-                filters[g] = "genre"
+                filters["genre"].append(g)
 
     st.sidebar.title("Year")
     for y in year:
         if not y == no_data_tag:
             if st.sidebar.checkbox(label=str(y), key=y, value=False):
-                filters[y] = "year"
+                filters["year"].append(y)
 
     st.sidebar.title("Languages")
     for l in language:
         if not l == no_data_tag:
             if st.sidebar.checkbox(label=str(l), key=l, value=False):
-                filters[l] = "languages"
+                filters["languages"].append(l)
 
     # TODO: Reset used_index array when filter option changes
     used_index = initializeUsedIndexArray()
