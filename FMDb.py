@@ -22,11 +22,27 @@ no_data_tag = "N/A"
 
 @st.cache(allow_output_mutation=True)
 def initializeUsedIndexArray():
+    """
+    Function to initialize an array of previously suggested indexes, to prevent any repeat suggestions
+
+    :return: An empty array
+    """
     return []
 
-# Some of the panda dataframe columns have arrays as type object, and so the data must be
-# split manually based on the column
 def splitData(column, data):
+    """
+    Due to data format inconsistencies across different columns in the csv file, this function will manually extract the
+    necessary data from the specified column until a suitable method is in place to make the data from each column uniform.
+    Based on the column name passed to the function, the appropriate method of data extraction takes place, and a list
+    containing the extracted data is returned
+
+    :param column: the name of the column that the data is from, which determines the method of extracting it
+    :param data: the pre-extracted data
+    :return: an array containing the extracted data
+
+    TODO: Once the logic is fully realised, clean up the code to make more efficient
+    TODO: Create a method in updateCSV.py to make the data in the csv more uniform, to scale down the size of this method
+    """
     data_array = []
 
     if column == "genre":
@@ -50,15 +66,26 @@ def splitData(column, data):
 
     return data_array
 
-# Function to check if a value is in a specified array
 def isPresent(array, item):
+    """
+    Function to check if a given item is in a specified array
+
+    :param array: the array that the specified item may or may not be present in
+    :param item: the item that is being looked for in the given array
+    :return: a boolean denoting whether the item was found in the array
+    """
     if item in array:
         return True
     else:
         return False
 
-# Function to populate the filter lists based on the csv file data
 def getOptions(movie_data):
+    """
+    Function to populate the filter lists based on the csv data. The function goes through each row and column, storing
+    all necessary and new information in their respective arrays.
+
+    :param movie_data: the data from the csv file
+    """
     for ind in movie_data.index:
         genre_data = splitData("genre", movie_data["genre"][ind])
         for g in genre_data:
@@ -89,8 +116,15 @@ def getOptions(movie_data):
     year.sort()
     language.sort()
 
-# Function to get the poster of the recommended movie from the movie poster folder
 def getMoviePoster(movie_title):
+    """
+    Function to get the poster of the recommended movie from the movie poster folder based on the given movie title. The
+    movie poster subfolders are sorted alphabetically, and so the first letter of the movie title is used in the path. If
+    the movie title begins with a numeric value, then the '#' is folder is accessed.
+
+    :param movie_title: movie title of the required movie poster image
+    :return: the image of the requested movie poster
+    """
     if movie_title[0].isdigit():
         poster_file_path = os.path.join(os.getcwd(), "movie_posters", "#", movie_title + ".jpg")
     else:
@@ -101,16 +135,33 @@ def getMoviePoster(movie_title):
 
     return poster_file
 
-# Function to insert used index into array
 def insertIntoUsedIndexArray(index):
+    """
+    Function to insert an index into the used index array, to prevent repeat suggestions
+
+    :param index: the most recently suggested index
+    """
     used_index.append(index)
 
-# Clears contents of used index array
 def resetUsedIndexArray():
+    """
+    Function to clear contents of used index array
+
+    """
     used_index.clear()
 
-# Function to get random index from given dataset
 def getRandomIndex(movie_list, attempt_count):
+    """
+    Function to get a random index from the given data set. The random range is between 0 and the length of the given
+    data set's index count
+
+    :param movie_list: the data set that the suggestion will come from
+    :param attempt_count: the count of how many attempts it has been to find a unique suggestion. While the attempt_count
+    is below a given threshold, an attempt will be made to find an index of a movie that has yet to be suggested. If the
+    attempt_count goes above the given threshold, then the most recently decided random index is used, regardless of
+    whether it is a repeat suggestion or not.
+    :return: the index of the next randomly suggested movie from the given data set
+    """
     rand_index = random.randrange(0, len(movie_list.index))
 
     print("Attempt Count : " + str(attempt_count))
@@ -121,8 +172,18 @@ def getRandomIndex(movie_list, attempt_count):
         print("----------------------------\n\n")
         return rand_index
 
-# Function to get a dataframe of potentially recommended movies, including filters if applicable
 def getRecommendation(movie_list):
+    """
+    Function to get a data frame of movies to be recommended, including filters if applicable, which are stored within
+    the filters dictionary. If there are filters present, a data frame is created for each filter condition, and all
+    data frames are merged to create the final filtered data frame containing the movie suggestions. If no filters are
+    present, then a random index is produced from the unfiltered movie list
+
+    :param movie_list: a list of all movies
+    :return: the recommended movie data
+
+    TODO: a complete rework of this function is necessary, as it currently deals with only AND logic when dealing with more than one filter
+    """
     if len(filters) > 0:
         filtered_movie_list = pd.DataFrame()
 
@@ -138,8 +199,11 @@ def getRecommendation(movie_list):
         insertIntoUsedIndexArray(random_index)
         return movie_list.iloc[random_index]
 
-# Function to display the recommendation information using streamline
 def displayRecommendation():
+    """
+    Function to get a recommendation for the user, and display that recommendation information using streamline
+
+    """
     st.title("Movie Recommended")
     recommendation = getRecommendation(movies)
 
@@ -171,34 +235,55 @@ def displayRecommendation():
     st.header("Language")
     st.subheader(formatArrayToString(splitData("languages", recommendation.languages)))
 
-# Function to format the contents of an array to a string of it's values
 def formatArrayToString(data_array):
+    """
+    Function to format the contents of an array to a string of it's values. Used primarily when displaying the information
+    of the recommended movie to the user, as some information is stored as an array, but needs to be displayed as a string
+
+    :param data_array: an array of the required data to be formatted
+    :return: the formatted data
+    """
     formatted_string = ""
     for data in data_array:
         formatted_string = formatted_string + data + ", "
 
     return formatted_string[:-2]
 
-# Function to return dataframe based on filter option
-def getFilter(key, value, dataframe):
-    # TODO: - Add an OR condition for actors, directors etc.
-    if value == "genre":
-        return dataframe[dataframe.genre.str.contains(key)]
+def getFilter(filter_value, filter_key, dataframe):
+    """
+    Function to return a filtered data frame based on the given filter option
 
-    if value == "director":
-        return dataframe[dataframe.director.str.contains(key)]
+    :param filter_value: the value of the filter option
+    :param filter_key: the type of filter needed
+    :param dataframe: the data frame that is being filtered
+    :return: the filtered data frame
 
-    if value == "actor":
-        return dataframe[dataframe.cast.str.contains(key)]
+    TODO: Complete rework of this function in tandem with the getRecommendation function
+    TODO: - Add an OR condition for actors, directors etc.
+    """
+    if filter_key == "genre":
+        return dataframe[dataframe.genre.str.contains(filter_value)]
 
-    if value == "year":
-        return dataframe.loc[dataframe.year == key]
+    if filter_key == "director":
+        return dataframe[dataframe.director.str.contains(filter_value)]
 
-    if value == "languages":
-        return dataframe[dataframe.languages.str.contains(key, na=False)]
+    if filter_key == "actor":
+        return dataframe[dataframe.cast.str.contains(filter_value)]
 
-# Function to merge each filtered dataframes
+    if filter_key == "year":
+        return dataframe.loc[dataframe.year == filter_value]
+
+    if filter_key == "languages":
+        return dataframe[dataframe.languages.str.contains(filter_value, na=False)]
+
 def mergeFilteredMovieList(filtered_movie_list, new_movie_list):
+    """
+    Function to merge the filtered movie suggestion data frames
+
+    :param filtered_movie_list: the prime filtered data frame
+    :param new_movie_list: the data frame to be merged with the prime data frame
+    :return: the merged data frame
+    """
     if len(filtered_movie_list.index) > 0:
         return pd.merge(filtered_movie_list, new_movie_list, on=list(filtered_movie_list.columns.values), how="outer")
     else:
