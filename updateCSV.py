@@ -11,25 +11,26 @@ last_updated_list_array = []
 
 CSV_file = "movie_info.csv"
 movie_list_file = "../../Documents/Movie_List.txt"
-# CSV_file = "temp_movie_info.csv"
-# movie_list_file = "temp_movie_list.txt"
+#CSV_file = "temp_movie_info.csv"
+#movie_list_file = "temp_movie_list.txt"
 
 last_updated_list_file = "last_updated_list.txt"
 
-def getIndexOfMovie_IMDbSearch(movie_title):
+def checkForUpdateInList(movie_title):
     """
-    Function to get the index of a movie in the imdb_movie_list based on it's title
+    Function to check if a given movie title is present in the last updated list text file, and if so then it is removed
+    from the array. This is to remove any movies that had previously been on the original movie list that are no longer
+    present.
 
-    :param movie_title: the movie title who's index is needed
-    :return: the index of the given movie title
+    :param movie_title: the movie title that is being checked
+    :return: a boolean value denoting whether the movie title is present or not
     """
-    index = 0
+    if movie_title in last_updated_list_array:
+        last_updated_list_array.remove(movie_title)
+        return True
 
-    for movie in all_imdb_movies:
-        if movie_title in movie["title"]:
-            return index
-
-        index += 1
+    else:
+        return False
 
 def getMovieTitleFromIndex(specified_index):
     """
@@ -49,6 +50,80 @@ def getMovieTitleFromIndex(specified_index):
             return movie.replace("\n", "")
 
         curr_index += 1
+
+def getIndexOfMovie_IMDbSearch(movie_title):
+    """
+    Function to get the index of a movie in the imdb_movie_list based on it's title
+
+    :param movie_title: the movie title who's index is needed
+    :return: the index of the given movie title
+    """
+    index = 0
+
+    for movie in all_imdb_movies:
+        if movie_title in movie["title"]:
+            return index
+
+        index += 1
+
+def checkPosterIsPresent(movie_title):
+    """
+    Function to check if the poster of a given movie has already been downloaded and stored in the movie posters folder
+
+    :param movie_title: the title of the movie that is being checked
+    :return: a boolean value denoting whether the poster is present in the movie posters folder
+    """
+    poster_folder_path = os.path.join(curr_directory_path, "movie_posters", movie_title[0].upper())
+
+    try:
+        poster_ = open(os.path.join(poster_folder_path, movie_title + ".jpg"))
+        poster_.close()
+        return True
+
+    except IOError:
+        return False
+
+def cleanValues(movie, key):
+    """
+    Function to clean up the data to make it more uniform, allowing for easier parsing in the future.
+    The function will:
+        - Replace any missing values with "N/A"
+        - Update movie titles pulled from imdb that contain special characters to the original title in the .txt file
+        - Simplify the lists of directors & cast to contain just their names
+
+    :param movie: the imdb information of a movie
+    :param key: the column that is being checked
+    :return: the data that will be stored in the csv file column
+    """
+    try:
+        type(movie[key])
+
+        if key == "title":
+            if set(movie["title"]).difference(pt):
+                return getMovieTitleFromIndex(getIndexOfMovie_IMDbSearch(movie["title"]))
+
+        elif key == "director" or key == "cast":
+            formatted_names = []
+
+            for names in movie[key]:
+                formatted_names.append(names["long imdb name"])
+
+            return formatted_names
+
+    except:
+        return "N/A"
+
+    return movie[key]
+
+
+def populateLastUpdatedArray(last_updated_file):
+    """
+    Function to populate an array with the contents of the last updated movies text file
+
+    :param last_updated_file: the last updated movies text file
+    """
+    for column in last_updated_file:
+        last_updated_list_array.append(column)
 
 def getMovies(movies):
     """
@@ -96,84 +171,6 @@ def getMovies(movies):
 
     return imdb_movies
 
-def checkValueIsPresent(movie, key):
-    """
-    Function to check if a given value is present in the movie information, and if not, replaces the value with a
-    standardised "N/A"
-
-    :param movie: the imdb information of a movie
-    :param key: the column that is being checked
-    :return: the data that will be stored in the csv file column
-    """
-    try:
-        type(movie[key])
-
-        if key == "title":
-            if set(movie["title"]).difference(pt):
-                return getMovieTitleFromIndex(getIndexOfMovie_IMDbSearch(movie["title"]))
-
-    except:
-        return "N/A"
-
-    return movie[key]
-
-def checkPosterIsPresent(movie_title):
-    """
-    Function to check if the poster of a given movie has already been downloaded and stored in the movie posters folder
-
-    :param movie_title: the title of the movie that is being checked
-    :return: a boolean value denoting whether the poster is present in the movie posters folder
-    """
-    poster_folder_path = os.path.join(curr_directory_path, "movie_posters", movie_title[0].upper())
-
-    try:
-        poster_ = open(os.path.join(poster_folder_path, movie_title + ".jpg"))
-        poster_.close()
-        return True
-
-    except IOError:
-        return False
-
-def checkForUpdateInList(movie_title):
-    """
-    Function to check if a given movie title is present in the last updated list text file, and if so then it is removed
-    from the array. This is to remove any movies that had previously been on the original movie list that are no longer
-    present.
-
-    :param movie_title: the movie title that is being checked
-    :return: a boolean value denoting whether the movie title is present or not
-    """
-    if movie_title in last_updated_list_array:
-        last_updated_list_array.remove(movie_title)
-        return True
-
-    else:
-        return False
-
-def populateLastUpdatedArray(last_updated_file):
-    """
-    Function to populate an array with the contents of the last updated movies text file
-
-    :param last_updated_file: the last updated movies text file
-    """
-    for column in last_updated_file:
-        last_updated_list_array.append(column)
-
-def updateLastUpdatedMovieList(most_recent_list):
-    """
-    Function to update the last updated movies text file to the most recent version
-
-    :param most_recent_list: the most recently updated list of last updated movies
-    """
-    most_recent_list.seek(0)
-
-    last_updated_list = open(last_updated_list_file, "w")
-
-    for line in most_recent_list:
-        last_updated_list.write(line)
-
-    last_updated_list.close()
-
 def appendToCSVfile(movies):
     """
     Function to create and populate a csv file with the given imdb movie data
@@ -184,19 +181,19 @@ def appendToCSVfile(movies):
         headers = ["title", "year", "genre", "director", "cast", "countries", "rating", "languages"]
 
         writer = csv.DictWriter(file, headers)
-
+        #writer.writeheader()
         for movie in movies:
             try:
                 print("Appending " + movie["title"])
 
-                writer.writerow({"title": checkValueIsPresent(movie, "title"),
-                                 "year": checkValueIsPresent(movie, "year"),
-                                 "genre": checkValueIsPresent(movie, "genre")[:3],
-                                 "director": checkValueIsPresent(movie, "director")[:2],
-                                 "cast": checkValueIsPresent(movie, "cast")[:10],
-                                 "countries": checkValueIsPresent(movie, "countries")[:3],
-                                 "rating": checkValueIsPresent(movie, "rating"),
-                                 "languages": checkValueIsPresent(movie, "languages")[:3]})
+                writer.writerow({"title": cleanValues(movie, "title"),
+                                 "year": cleanValues(movie, "year"),
+                                 "genre": cleanValues(movie, "genre")[:3],
+                                 "director": cleanValues(movie, "director")[:2],
+                                 "cast": cleanValues(movie, "cast")[:10],
+                                 "countries": cleanValues(movie, "countries")[:3],
+                                 "rating": cleanValues(movie, "rating"),
+                                 "languages": cleanValues(movie, "languages")[:3]})
 
                 # TODO: movie["duration"]
 
@@ -241,6 +238,22 @@ def removeFromCSVfile():
             else:
                 print("Removing: " + title_year)
 
+def updateLastUpdatedMovieList(most_recent_list):
+    """
+    Function to update the last updated movies text file to the most recent version
+
+    :param most_recent_list: the most recently updated list of last updated movies
+    """
+    most_recent_list.seek(0)
+
+    last_updated_list = open(last_updated_list_file, "w")
+
+    for line in most_recent_list:
+        last_updated_list.write(line)
+
+    last_updated_list.close()
+
+
 _imdb = IMDb()
 
 movie_list = open(movie_list_file, "r")
@@ -252,14 +265,13 @@ all_imdb_movies = getMovies(movie_list)
 
 last_updated_movie_list.close()
 
-updateLastUpdatedMovieList(movie_list)
-
-movie_list.close()
-
 appendToCSVfile(all_imdb_movies)
 
 if len(last_updated_list_array) > 0:
     removeFromCSVfile()
+
+updateLastUpdatedMovieList(movie_list)
+movie_list.close()
 
 '''
 title
