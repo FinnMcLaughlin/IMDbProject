@@ -1,6 +1,7 @@
 import pandas as pd
 import streamlit as st
 from PIL import Image, ImageFile
+import urllib.request
 import random
 import os
 
@@ -207,33 +208,37 @@ def displayRecommendation():
 
     print(recommendation)
 
-    st.write(used_index)
+    if len(recommendation) > 0:
+        st.write(used_index)
 
-    # Title printed for image debug purposes
-    st.write(recommendation.title)
+        # Title printed for image debug purposes
+        st.write(recommendation.title)
 
-    st.image(getMoviePoster(recommendation.title), "Poster for " + recommendation.title, use_column_width=True)
+        st.image(getMoviePoster(recommendation.title), "Poster for " + recommendation.title, use_column_width=True)
 
-    st.header("Title")
-    st.subheader(recommendation.title)
+        st.header("Title")
+        st.subheader(recommendation.title)
 
-    st.header("Year")
-    st.subheader(str(recommendation.year))
+        st.header("Year")
+        st.subheader(str(recommendation.year))
 
-    st.header("Rating")
-    st.subheader(str(recommendation.rating))
+        st.header("Rating")
+        st.subheader(str(recommendation.rating))
 
-    st.header("Genre")
-    st.subheader(formatArrayToString(splitData("genre", recommendation.genre)))
+        st.header("Genre")
+        st.subheader(formatArrayToString(splitData("genre", recommendation.genre)))
 
-    st.header("Cast")
-    st.subheader(formatArrayToString(splitData("actor", recommendation.cast)))
+        st.header("Cast")
+        st.subheader(formatArrayToString(splitData("actor", recommendation.cast)))
 
-    st.header("Director")
-    st.subheader(formatArrayToString(splitData("director", recommendation.director)))
+        st.header("Director")
+        st.subheader(formatArrayToString(splitData("director", recommendation.director)))
 
-    st.header("Language")
-    st.subheader(formatArrayToString(splitData("languages", recommendation.languages)))
+        st.header("Language")
+        st.subheader(formatArrayToString(splitData("languages", recommendation.languages)))
+    else:
+        st.write("Unfortunately no movie from the list fits this criteria")
+        st.image("resources/no_rec_image.png", "Truly, a sad day", use_column_width=True)
 
 def getRecommendation(movie_list):
     """
@@ -281,10 +286,17 @@ def getRecommendation(movie_list):
 
     print("Length: " + str(len(filtered_movie_list)))
     print(filtered_movie_list)
-    random_index = getRandomIndex(filtered_movie_list, 0)
-    print(random_index)
-    # insertIntoUsedIndexArray(random_index)
-    return filtered_movie_list.iloc[random_index].drop_duplicates()
+
+    if len(filtered_movie_list) > 0:
+        random_index = getRandomIndex(filtered_movie_list, 0)
+
+        print(random_index)
+        # insertIntoUsedIndexArray(random_index)
+
+        return filtered_movie_list.iloc[random_index].drop_duplicates()
+
+    else:
+        return filtered_movie_list
 
 def getMoviePoster(movie_title):
     """
