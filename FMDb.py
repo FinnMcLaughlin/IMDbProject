@@ -1,8 +1,10 @@
 import pandas as pd
 import streamlit as st
-from PIL import Image
+from PIL import Image, ImageFile
 import random
 import os
+
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 # Array for all filter options that will be displayed on sidebar
 year = []
@@ -12,7 +14,8 @@ actor = []
 director = []
 
 # Array to keep track of previously recommended indexes to avoid repeat recommendations
-global used_index
+#global used_index
+used_index = []
 
 # Dictionary to handle all active filters
 filters = {
@@ -92,28 +95,28 @@ def getFilter(filter_key, filter_value, dataframe):
     if filter_key == "genre":
         return dataframe[dataframe.genre.str.contains(filter_value)]
 
-    if filter_key == "director":
-        return dataframe[dataframe.director.str.contains(filter_value)]
-
-    if filter_key == "actor":
-        return dataframe[dataframe.cast.str.contains(filter_value)]
-
     if filter_key == "year":
         return dataframe.loc[dataframe.year == filter_value]
 
     if filter_key == "languages":
         return dataframe[dataframe.languages.str.contains(filter_value, na=False)]
 
-def mergeFilteredMovieList(filtered_movie_list, new_movie_list):
+def mergeFilteredMovieList(filtered_movie_list, new_movie_list, key):
     """
-    Function to merge the filtered movie suggestion data frames
+    Function to merge the filtered movie suggestion data frames. Genre concatenation will concatenate the two filtered
+    data frame objects by the intersection, whereas other concatenation will concatenate by the union. The logic here
+    is that you can have a movie of two different genres (Action Comedy) but not a movie from two different years.
 
+    :param key: the filter key to determine what type of concatenation will occur
     :param filtered_movie_list: the prime filtered data frame
     :param new_movie_list: the data frame to be merged with the prime data frame
     :return: the merged data frame
     """
     if len(filtered_movie_list.index) > 0:
-        return pd.merge(filtered_movie_list, new_movie_list, on=list(filtered_movie_list.columns.values), how="outer")
+        if key == "genre":
+            return pd.concat([filtered_movie_list, new_movie_list], axis=1, join="inner")
+        else:
+            return pd.concat([filtered_movie_list, new_movie_list])
     else:
         return new_movie_list
 
@@ -129,6 +132,7 @@ def getRandomIndex(movie_list, attempt_count):
     whether it is a repeat suggestion or not.
     :return: the index of the next randomly suggested movie from the given data set
     """
+    print("-------------------------------" + str(len(movie_list)) + "-------------------------------")
     rand_index = random.randrange(0, len(movie_list.index))
 
     print("Attempt Count : " + str(attempt_count))
@@ -201,6 +205,8 @@ def displayRecommendation():
     st.title("Movie Recommended")
     recommendation = getRecommendation(movies)
 
+    print(recommendation)
+
     st.write(used_index)
 
     # Title printed for image debug purposes
@@ -246,14 +252,39 @@ def getRecommendation(movie_list):
     if len(filters["genre"]) > 0 or len(filters["year"]) > 0 or len(filters["languages"]) > 0:
         filtered_movie_list = pd.DataFrame()
 
+        print(str(filters))
+
         for key in filters:
             if len(filters[key]) > 0:
-                for filter_option in filters[key]:
-                    filtered_movie_list = mergeFilteredMovieList(filtered_movie_list, getFilter(key, filter_option, movie_list))
+                if key == "genre":
+                    for filter_option in filters[key]:
 
+                        filtered_movie_list = mergeFilteredMovieList(filtered_movie_list, getFilter(key, filter_option, movie_list), key).drop_duplicates()
+                        filtered_movie_list = filtered_movie_list.loc[:, ~filtered_movie_list.columns.duplicated()]
+
+                else:
+                    dataframes = []
+
+                    for filter_option in filters[key]:
+                        if len(filtered_movie_list.index) > 0:
+                            dataframes.append(getFilter(key, filter_option, filtered_movie_list))
+                        else:
+                            dataframes.append(getFilter(key, filter_option, movie_list))
+
+                    filtered_movie_list = dataframes[0]
+
+                    if len(dataframes) > 1:
+                        for df in dataframes[1:]:
+                            filtered_movie_list = mergeFilteredMovieList(filtered_movie_list, df, key)
+                            filtered_movie_list = filtered_movie_list.loc[:, ~filtered_movie_list.columns.duplicated()]
+
+
+    print("Length: " + str(len(filtered_movie_list)))
+    print(filtered_movie_list)
     random_index = getRandomIndex(filtered_movie_list, 0)
-    insertIntoUsedIndexArray(random_index)
-    return movie_list.iloc[random_index]
+    print(random_index)
+    # insertIntoUsedIndexArray(random_index)
+    return filtered_movie_list.iloc[random_index].drop_duplicates()
 
 def getMoviePoster(movie_title):
     """
@@ -300,7 +331,14 @@ if __name__ == "__main__":
     getOptions(movies)
 
     # Recommendation function request for testing purposes
-    #getRecommendation(movies)
+    #filters["genre"].append("Comedy")
+    #filters["genre"].append("Action")
+    #filters["year"].append(1992)
+    #filters["year"].append(1993)
+    #filters["year"].append(1994)
+    #filters["year"].append(1995)
+
+    #print(getRecommendation(movies))
 
     # Streamlit code for the sidebar where users can add filters to their movie recommendations
     # Each filter options have a title and are taken from their respective arrays that were populated from
