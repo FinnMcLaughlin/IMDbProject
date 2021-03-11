@@ -24,6 +24,9 @@ filters = {
     "languages": []
 }
 
+# Dictionary to store all decades in for mass filter selection on years
+decades = {}
+
 button_label = "Get Movie Recommendation"
 no_data_tag = "N/A"
 
@@ -79,6 +82,24 @@ def isPresent(array, item):
         return True
     else:
         return False
+
+def initializeDecadesArray():
+    """
+    Function to populate the decades dictionary, a dictionary that contains the values of all available years for each
+    decade in an attempt to streamline the year filter process
+
+    """
+    current_decade = str(year[0])[:-1]
+
+    decades[current_decade + "0s"] = []
+
+    for _year in year:
+        if current_decade in str(_year):
+            decades[current_decade + "0s"].append(_year)
+        else:
+            current_decade = str(_year)[:-1]
+            decades[current_decade + "0s"] = []
+            decades[current_decade + "0s"].append(_year)
 
 def getFilter(filter_key, filter_value, dataframe):
     """
@@ -196,6 +217,8 @@ def getOptions(movie_data):
     genre.sort()
     year.sort()
     language.sort()
+
+    initializeDecadesArray()
 
 def displayRecommendation():
     """
@@ -366,10 +389,17 @@ if __name__ == "__main__":
                             filters["genre"].append(g)
 
     with st.sidebar.beta_expander("Year(s)"):
-        for y in year:
-            if not y == no_data_tag:
-                if st.checkbox(label=str(y), key=y, value=False):
-                    filters["year"].append(y)
+        year_filter_type = st.radio("By Decade or specific year(s)", ("Decade", "Specific Year(s)"))
+        if year_filter_type == "Decade":
+            for key in decades:
+                if st.checkbox(label=str(key), key=key, value=False):
+                    for val in decades[key]:
+                        filters["year"].append(val)
+        else:
+            for y in year:
+                if not y == no_data_tag:
+                    if st.checkbox(label=str(y), key=y, value=False):
+                        filters["year"].append(y)
 
     with st.sidebar.beta_expander("Language(s)"):
         for l in language:
