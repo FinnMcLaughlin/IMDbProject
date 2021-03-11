@@ -1,7 +1,6 @@
 import pandas as pd
 import streamlit as st
 from PIL import Image, ImageFile
-import urllib.request
 import random
 import os
 
@@ -114,7 +113,7 @@ def mergeFilteredMovieList(filtered_movie_list, new_movie_list, key):
     :return: the merged data frame
     """
     if len(filtered_movie_list.index) > 0:
-        if key == "genre":
+        if key == "genre" and genre_filter_type == "&&":
             return pd.concat([filtered_movie_list, new_movie_list], axis=1, join="inner")
         else:
             return pd.concat([filtered_movie_list, new_movie_list])
@@ -210,6 +209,7 @@ def displayRecommendation():
 
     if len(recommendation) > 0:
         st.write(used_index)
+        st.write(genre_filter_type)
 
         # Title printed for image debug purposes
         st.write(recommendation.title)
@@ -380,6 +380,13 @@ if __name__ == "__main__":
 
     # TODO: Reset used_index array when filter option changes
     used_index = initializeUsedIndexArray()
+
+    genre_filter_type = ""
+
+    # TODO: Change the labels and display message to something more intuitive
+    if len(filters["genre"]) > 1:
+        genre_filter_type = st.radio("AND gate or OR gate", ('&&', '||'))
+
 
     if st.button(button_label):
         displayRecommendation()
