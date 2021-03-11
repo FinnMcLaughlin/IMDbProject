@@ -357,26 +357,25 @@ if __name__ == "__main__":
     # the CSV file previously.
     #
     # When a checkbox is chosen, the data is added to the filters dictionary
-    # TODO: - Add drop downs for each sidebar options
     # TODO: - Include Actors images
 
-    st.sidebar.title("Genre(s)")
-    for g in genre:
-        if not g == no_data_tag:
-            if st.sidebar.checkbox(label=str(g), key=g, value=False):
-                filters["genre"].append(g)
+    with st.sidebar.beta_expander("Genre(s)"):
+        for g in genre:
+            if not g == no_data_tag:
+                    if st.checkbox(label=str(g), key=g, value=False):
+                            filters["genre"].append(g)
 
-    st.sidebar.title("Year")
-    for y in year:
-        if not y == no_data_tag:
-            if st.sidebar.checkbox(label=str(y), key=y, value=False):
-                filters["year"].append(y)
+    with st.sidebar.beta_expander("Year(s)"):
+        for y in year:
+            if not y == no_data_tag:
+                if st.checkbox(label=str(y), key=y, value=False):
+                    filters["year"].append(y)
 
-    st.sidebar.title("Languages")
-    for l in language:
-        if not l == no_data_tag:
-            if st.sidebar.checkbox(label=str(l), key=l, value=False):
-                filters["languages"].append(l)
+    with st.sidebar.beta_expander("Language(s)"):
+        for l in language:
+            if not l == no_data_tag:
+                if st.checkbox(label=str(l), key=l, value=False):
+                    filters["languages"].append(l)
 
     # TODO: Reset used_index array when filter option changes
     used_index = initializeUsedIndexArray()
