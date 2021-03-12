@@ -13,16 +13,14 @@ language = []
 actor = []
 director = []
 
+current_filter_options = ["genre", "year", "languages", "rating"]
+
 # Array to keep track of previously recommended indexes to avoid repeat recommendations
 #global used_index
 used_index = []
 
 # Dictionary to handle all active filters
-filters = {
-    "genre": [],
-    "year": [],
-    "languages": []
-}
+filters = {}
 
 # Dictionary to store all decades in for mass filter selection on years
 decades = {}
@@ -122,6 +120,9 @@ def getFilter(filter_key, filter_value, dataframe):
     if filter_key == "languages":
         return dataframe[dataframe.languages.str.contains(filter_value, na=False)]
 
+    if filter_key == "rating":
+        return dataframe[dataframe.rating >= filter_value]
+
 def mergeFilteredMovieList(filtered_movie_list, new_movie_list, key):
     """
     Function to merge the filtered movie suggestion data frames. Genre concatenation will concatenate the two filtered
@@ -134,7 +135,9 @@ def mergeFilteredMovieList(filtered_movie_list, new_movie_list, key):
     :return: the merged data frame
     """
     if len(filtered_movie_list.index) > 0:
-        if key == "genre" and genre_filter_type == "&&":
+        if key == "rating":
+            return pd.concat([filtered_movie_list, new_movie_list], axis=1, join="inner")
+        elif key == "genre" and genre_filter_type == "&&":
             return pd.concat([filtered_movie_list, new_movie_list], axis=1, join="inner")
         else:
             return pd.concat([filtered_movie_list, new_movie_list])
@@ -220,6 +223,18 @@ def getOptions(movie_data):
 
     initializeDecadesArray()
 
+def addFilterToFiltersDictionary(filter_key, value):
+    """
+    Function to add chosen filters to the fitlers dictionary
+
+    :param filter_key: the filter type, and the key in which the filter value will be stored under
+    :param value: the filter value
+    """
+    if filter_key in filters.keys():
+        filters[filter_key].append(value)
+    else:
+        filters[filter_key] = [value]
+
 def displayRecommendation():
     """
     Function to get a recommendation for the user, and display that recommendation information using streamline
@@ -272,39 +287,36 @@ def getRecommendation(movie_list):
 
     :param movie_list: a list of all movies
     :return: the recommended movie data
-
-    TODO: a complete rework of this function is necessary, as it currently deals with only AND logic when dealing with more than one filter
     """
     filtered_movie_list = movie_list
 
-    if len(filters["genre"]) > 0 or len(filters["year"]) > 0 or len(filters["languages"]) > 0:
+    if any(x in current_filter_options for x in filters.keys()):
         filtered_movie_list = pd.DataFrame()
 
         print(str(filters))
 
         for key in filters:
-            if len(filters[key]) > 0:
-                if key == "genre":
-                    for filter_option in filters[key]:
+            if key == "genre" or key == "rating":
+                for filter_option in filters[key]:
 
-                        filtered_movie_list = mergeFilteredMovieList(filtered_movie_list, getFilter(key, filter_option, movie_list), key).drop_duplicates()
+                    filtered_movie_list = mergeFilteredMovieList(filtered_movie_list, getFilter(key, filter_option, movie_list), key).drop_duplicates()
+                    filtered_movie_list = filtered_movie_list.loc[:, ~filtered_movie_list.columns.duplicated()]
+
+            else:
+                dataframes = []
+
+                for filter_option in filters[key]:
+                    if len(filtered_movie_list.index) > 0:
+                        dataframes.append(getFilter(key, filter_option, filtered_movie_list))
+                    else:
+                        dataframes.append(getFilter(key, filter_option, movie_list))
+
+                filtered_movie_list = dataframes[0]
+
+                if len(dataframes) > 1:
+                    for df in dataframes[1:]:
+                        filtered_movie_list = mergeFilteredMovieList(filtered_movie_list, df, key)
                         filtered_movie_list = filtered_movie_list.loc[:, ~filtered_movie_list.columns.duplicated()]
-
-                else:
-                    dataframes = []
-
-                    for filter_option in filters[key]:
-                        if len(filtered_movie_list.index) > 0:
-                            dataframes.append(getFilter(key, filter_option, filtered_movie_list))
-                        else:
-                            dataframes.append(getFilter(key, filter_option, movie_list))
-
-                    filtered_movie_list = dataframes[0]
-
-                    if len(dataframes) > 1:
-                        for df in dataframes[1:]:
-                            filtered_movie_list = mergeFilteredMovieList(filtered_movie_list, df, key)
-                            filtered_movie_list = filtered_movie_list.loc[:, ~filtered_movie_list.columns.duplicated()]
 
 
     print("Length: " + str(len(filtered_movie_list)))
@@ -386,7 +398,7 @@ if __name__ == "__main__":
         for g in genre:
             if not g == no_data_tag:
                     if st.checkbox(label=str(g), key=g, value=False):
-                            filters["genre"].append(g)
+                            addFilterToFiltersDictionary("genre", g)
 
     with st.sidebar.beta_expander("Year(s)"):
         year_filter_type = st.radio("By Decade or specific year(s)", ("Decade", "Specific Year(s)"))
@@ -394,18 +406,23 @@ if __name__ == "__main__":
             for key in decades:
                 if st.checkbox(label=str(key), key=key, value=False):
                     for val in decades[key]:
-                        filters["year"].append(val)
+                        addFilterToFiltersDictionary("year", val)
         else:
             for y in year:
                 if not y == no_data_tag:
                     if st.checkbox(label=str(y), key=y, value=False):
-                        filters["year"].append(y)
+                        addFilterToFiltersDictionary("year", y)
 
     with st.sidebar.beta_expander("Language(s)"):
         for l in language:
             if not l == no_data_tag:
                 if st.checkbox(label=str(l), key=l, value=False):
-                    filters["languages"].append(l)
+                    addFilterToFiltersDictionary("languages", l)
+
+    with st.sidebar.beta_expander("Rating"):
+        rating_filter_type = st.radio("", ("Any Rating", "Minimum Rating"))
+        if rating_filter_type == "Minimum Rating":
+            filters["rating"] = [st.slider("Minimum Rating", 0.0, 10.0, 0.0, 0.1, "%f")]
 
     # TODO: Reset used_index array when filter option changes
     used_index = initializeUsedIndexArray()
@@ -413,12 +430,9 @@ if __name__ == "__main__":
     genre_filter_type = ""
 
     # TODO: Change the labels and display message to something more intuitive
-    if len(filters["genre"]) > 1:
+    if "genre" in filters.keys() and len(filters["genre"]) > 1:
         genre_filter_type = st.radio("AND gate or OR gate", ('&&', '||'))
 
 
     if st.button(button_label):
         displayRecommendation()
-
-    #st.write(movies[movies.genre.str.contains('Horror')])
-    #print(movies.loc[movies.year == 1991])
