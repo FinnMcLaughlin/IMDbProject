@@ -15,9 +15,6 @@ director = []
 
 current_filter_options = ["genre", "year", "languages", "rating"]
 
-# Array to keep track of previously recommended indexes to avoid repeat recommendations
-#global used_index
-used_index = []
 
 # Dictionary to handle all active filters
 filters = {}
@@ -31,11 +28,12 @@ no_data_tag = "N/A"
 @st.cache(allow_output_mutation=True)
 def initializeUsedIndexArray():
     """
-    Function to initialize an array of previously suggested indexes, to prevent any repeat suggestions
+    Function to initialize an array of previously suggested indexes as well as a dictionary to keep track of updates or
+    changes to the filter options, to prevent any repeat suggestions
 
-    :return: An empty array
+    :return: An empty array and dictionary
     """
-    return []
+    return [], {}
 
 def splitData(column, data):
     """
@@ -156,13 +154,14 @@ def getRandomIndex(movie_list, attempt_count):
     whether it is a repeat suggestion or not.
     :return: the index of the next randomly suggested movie from the given data set
     """
+
     print("-------------------------------" + str(len(movie_list)) + "-------------------------------")
     rand_index = random.randrange(0, len(movie_list.index))
 
-    print("Attempt Count : " + str(attempt_count))
+    print("Attempt Count : " + str(attempt_count) + " Rand Index: " + str(rand_index))
 
-    if rand_index in used_index and attempt_count < 25:
-        getRandomIndex(movie_list, attempt_count + 1)
+    if rand_index in used_index_array and attempt_count < 25:
+        return getRandomIndex(movie_list, attempt_count + 1)
     else:
         print("----------------------------\n\n")
         return rand_index
@@ -173,14 +172,41 @@ def insertIntoUsedIndexArray(index):
 
     :param index: the most recently suggested index
     """
-    used_index.append(index)
+    used_index_array.append(index)
 
 def resetUsedIndexArray():
     """
     Function to clear contents of used index array
 
     """
-    used_index.clear()
+    used_index_array.clear()
+
+def updateFilterOptionsDictionary():
+    """
+    Function to update the updated_filter_options_dictionary data, to the most recent version of the selected filters
+
+    """
+    global updated_filter_options_dictionary
+    for key in filters.keys():
+        updated_filter_options_dictionary[key] = filters[key]
+
+def checkForChangeInFilters(random_index):
+    """
+    Function to check for changes made to the selected filters. If the filters dictionary and the updated_filter_options_dictionary
+    are no the same, then the used index array is reset. If they are the same, the current index is added to the used index array
+    to prevent repeat recommendations
+
+    :param random_index: the index of the recommended movie from the data frame
+
+    """
+    global updated_filter_options_dictionary
+
+    if not updated_filter_options_dictionary == filters:
+        resetUsedIndexArray()
+        updateFilterOptionsDictionary()
+
+    insertIntoUsedIndexArray(random_index)
+
 
 
 def getOptions(movie_data):
@@ -192,7 +218,6 @@ def getOptions(movie_data):
     """
     for ind in movie_data.index:
         genre_data = splitData("genre", movie_data["genre"][ind])
-        #print("Genre Data: " + str(genre_data))
         for g in genre_data:
             if not isPresent(genre, g):
                 genre.append(g)
@@ -246,8 +271,6 @@ def displayRecommendation():
     print(recommendation)
 
     if len(recommendation) > 0:
-        st.write(used_index)
-        st.write(genre_filter_type)
 
         # Title printed for image debug purposes
         st.write(recommendation.title)
@@ -323,10 +346,14 @@ def getRecommendation(movie_list):
     print(filtered_movie_list)
 
     if len(filtered_movie_list) > 0:
+
+        if not len(filtered_movie_list) > len(used_index_array):
+            st.write("All recommendations for this set of filters has been recommended!")
+            resetUsedIndexArray()
+
         random_index = getRandomIndex(filtered_movie_list, 0)
 
-        print(random_index)
-        # insertIntoUsedIndexArray(random_index)
+        checkForChangeInFilters(random_index)
 
         return filtered_movie_list.iloc[random_index].drop_duplicates()
 
@@ -368,6 +395,10 @@ def formatArrayToString(data_array):
 
 
 if __name__ == "__main__":
+    # Array to keep track of previously recommended indexes to avoid repeat recommendations
+    # global used_index_array, updated_filter_options_dictionary
+    used_index_array, updated_filter_options_dictionary = initializeUsedIndexArray()
+
     # Reads in movie data from csv file
     movies = pd.read_csv("movie_info.csv")
 
@@ -424,8 +455,6 @@ if __name__ == "__main__":
         if rating_filter_type == "Minimum Rating":
             filters["rating"] = [st.slider("Minimum Rating", 0.0, 10.0, 0.0, 0.1, "%f")]
 
-    # TODO: Reset used_index array when filter option changes
-    used_index = initializeUsedIndexArray()
 
     genre_filter_type = ""
 
