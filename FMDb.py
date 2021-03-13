@@ -46,8 +46,6 @@ def splitData(column, data):
     :param data: the pre-extracted data
     :return: an array containing the extracted data
 
-    TODO: Once the logic is fully realised, clean up the code to make more efficient
-    TODO: Create a method in updateCSV.py to make the data in the csv more uniform, to scale down the size of this method
     """
     data_array = []
 
@@ -106,7 +104,6 @@ def getFilter(filter_key, filter_value, dataframe):
     :param dataframe: the data frame that is being filtered
     :return: the filtered data frame
 
-    TODO: Complete rework of this function in tandem with the getRecommendation function
     TODO: - Add an OR condition for actors, directors etc.
     """
     if filter_key == "genre":
@@ -135,7 +132,7 @@ def mergeFilteredMovieList(filtered_movie_list, new_movie_list, key):
     if len(filtered_movie_list.index) > 0:
         if key == "rating":
             return pd.concat([filtered_movie_list, new_movie_list], axis=1, join="inner")
-        elif key == "genre" and genre_filter_type == "&&":
+        elif key == "genre" and genre_filter_type == "Must fit all genres":
             return pd.concat([filtered_movie_list, new_movie_list], axis=1, join="inner")
         else:
             return pd.concat([filtered_movie_list, new_movie_list])
@@ -319,7 +316,7 @@ def getRecommendation(movie_list):
         print(str(filters))
 
         for key in filters:
-            if key == "genre" or key == "rating":
+            if (key == "genre" and genre_filter_type == "Must fit all genres") or key == "rating":
                 for filter_option in filters[key]:
 
                     filtered_movie_list = mergeFilteredMovieList(filtered_movie_list, getFilter(key, filter_option, movie_list), key).drop_duplicates()
@@ -458,9 +455,9 @@ if __name__ == "__main__":
 
     genre_filter_type = ""
 
-    # TODO: Change the labels and display message to something more intuitive
     if "genre" in filters.keys() and len(filters["genre"]) > 1:
-        genre_filter_type = st.radio("AND gate or OR gate", ('&&', '||'))
+        genre_filter_type = st.radio("More than one genre selected. Do you want recommendations for movies that fit all selected genres"
+                                     "or any movie that fits any of the selected genres", ('Must fit all genres', 'Any of the selected genres'))
 
 
     if st.button(button_label):
