@@ -42,7 +42,6 @@ def getMovieTitleFromIndex(specified_index):
     curr_index = 0
 
     movie_list_ = open(movie_list_file, "r")
-    print(specified_index)
 
     for movie in movie_list_:
         if specified_index == curr_index:
@@ -260,7 +259,6 @@ movie_list = open(movie_list_file, "r")
 last_updated_movie_list = open(last_updated_list_file, "r")
 
 populateLastUpdatedArray(last_updated_movie_list)
-print(last_updated_list_array)
 all_imdb_movies = getMovies(movie_list)
 
 last_updated_movie_list.close()
@@ -272,14 +270,3 @@ if len(last_updated_list_array) > 0:
 
 updateLastUpdatedMovieList(movie_list)
 movie_list.close()
-
-'''
-title
-year
-cast []
-director []
-genres []
-countries []
-languages []
-rating
-'''

@@ -150,15 +150,11 @@ def getRandomIndex(movie_list, attempt_count):
     :return: the index of the next randomly suggested movie from the given data set
     """
 
-    print("-------------------------------" + str(len(movie_list)) + "-------------------------------")
     rand_index = random.randrange(0, len(movie_list.index))
-
-    print("Attempt Count : " + str(attempt_count) + " Rand Index: " + str(rand_index))
 
     if rand_index in used_index_array and attempt_count < 25:
         return getRandomIndex(movie_list, attempt_count + 1)
     else:
-        print("----------------------------\n\n")
         return rand_index
 
 def insertIntoUsedIndexArray(index):
@@ -167,6 +163,8 @@ def insertIntoUsedIndexArray(index):
 
     :param index: the most recently suggested index
     """
+    global used_index_array
+
     used_index_array.append(index)
 
 def resetUsedIndexArray():
@@ -174,6 +172,8 @@ def resetUsedIndexArray():
     Function to clear contents of used index array
 
     """
+    global used_index_array
+
     used_index_array.clear()
 
 def updateFilterOptionsDictionary():
@@ -244,6 +244,7 @@ def getOptions(movie_data):
     year.sort()
     language.sort()
 
+    # Initialize the decades array
     initializeDecadesArray()
 
 def addFilterToFiltersDictionary(filter_key, value):
@@ -261,17 +262,11 @@ def addFilterToFiltersDictionary(filter_key, value):
 def displayRecommendation():
     """
     Function to get a recommendation for the user, and display that recommendation information using streamline
-
     """
     st.title("Movie Recommended")
     recommendation = getRecommendation(movies)
 
-    print(recommendation)
-
     if len(recommendation) > 0:
-        st.write(str(used_index_array))
-        st.write(str(filters))
-        st.write(str(updated_filter_options_dictionary))
         # Title printed for image debug purposes
         st.write(recommendation.title)
 
@@ -320,8 +315,6 @@ def getRecommendation(movie_list):
     if any(x in current_filter_options for x in filters.keys()):
         filtered_movie_list = pd.DataFrame()
 
-        print(str(filters))
-
         for key in filters:
 
             if not key == "genre" and "genre" in filters.keys():
@@ -350,9 +343,6 @@ def getRecommendation(movie_list):
                         filtered_movie_list = mergeFilteredMovieList(filtered_movie_list, df, key)
                         filtered_movie_list = filtered_movie_list.loc[:, ~filtered_movie_list.columns.duplicated()]
 
-
-    print("Length: " + str(len(filtered_movie_list)))
-    print(filtered_movie_list)
 
     if len(filtered_movie_list) > 0:
 
@@ -411,21 +401,9 @@ if __name__ == "__main__":
     # Reads in movie data from csv file
     movies = pd.read_csv("movie_info.csv")
 
-    #for name, dtype in movies.dtypes.iteritems():
-        #print(name, dtype)
-
     # Extracts the filter options for the sidebar from the csv file and stores them in their respective arrays
     getOptions(movies)
 
-    # Recommendation function request for testing purposes
-    #filters["genre"].append("Comedy")
-    #filters["genre"].append("Action")
-    #filters["year"].append(1992)
-    #filters["year"].append(1993)
-    #filters["year"].append(1994)
-    #filters["year"].append(1995)
-
-    #print(getRecommendation(movies))
 
     # Streamlit code for the sidebar where users can add filters to their movie recommendations
     # Each filter options have a title and are taken from their respective arrays that were populated from
