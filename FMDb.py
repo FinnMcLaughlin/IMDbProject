@@ -267,6 +267,9 @@ def displayRecommendation():
     recommendation = getRecommendation(movies)
 
     if len(recommendation) > 0:
+        st.write(str(used_index_array))
+        st.write(str(filters))
+        st.write(str(updated_filter_options_dictionary))
         # Title printed for image debug purposes
         st.write(recommendation.title)
 
@@ -317,31 +320,33 @@ def getRecommendation(movie_list):
 
         for key in filters:
 
-            if not key == "genre" and "genre" in filters.keys():
-                if len(filtered_movie_list) < 1:
-                    return pd.DataFrame()
+            if not key == "genre_filter_type":
 
-            if (key == "genre" and genre_filter_type == "Must fit all genres") or key == "rating":
-                for filter_option in filters[key]:
+                if not key == "genre" and "genre" in filters.keys():
+                    if len(filtered_movie_list) < 1:
+                        return pd.DataFrame()
 
-                    filtered_movie_list = mergeFilteredMovieList(filtered_movie_list, getFilter(key, filter_option, movie_list), key).drop_duplicates()
-                    filtered_movie_list = filtered_movie_list.loc[:, ~filtered_movie_list.columns.duplicated()]
+                if (key == "genre" and genre_filter_type == "Must fit all genres") or key == "rating":
+                    for filter_option in filters[key]:
 
-            else:
-                dataframes = []
-
-                for filter_option in filters[key]:
-                    if len(filtered_movie_list.index) > 0:
-                        dataframes.append(getFilter(key, filter_option, filtered_movie_list))
-                    else:
-                        dataframes.append(getFilter(key, filter_option, movie_list))
-
-                filtered_movie_list = dataframes[0]
-
-                if len(dataframes) > 1:
-                    for df in dataframes[1:]:
-                        filtered_movie_list = mergeFilteredMovieList(filtered_movie_list, df, key)
+                        filtered_movie_list = mergeFilteredMovieList(filtered_movie_list, getFilter(key, filter_option, movie_list), key).drop_duplicates()
                         filtered_movie_list = filtered_movie_list.loc[:, ~filtered_movie_list.columns.duplicated()]
+
+                else:
+                    dataframes = []
+
+                    for filter_option in filters[key]:
+                        if len(filtered_movie_list.index) > 0:
+                            dataframes.append(getFilter(key, filter_option, filtered_movie_list))
+                        else:
+                            dataframes.append(getFilter(key, filter_option, movie_list))
+
+                    filtered_movie_list = dataframes[0]
+
+                    if len(dataframes) > 1:
+                        for df in dataframes[1:]:
+                            filtered_movie_list = mergeFilteredMovieList(filtered_movie_list, df, key)
+                            filtered_movie_list = filtered_movie_list.loc[:, ~filtered_movie_list.columns.duplicated()]
 
 
     if len(filtered_movie_list) > 0:
@@ -448,6 +453,7 @@ if __name__ == "__main__":
     if "genre" in filters.keys() and len(filters["genre"]) > 1:
         genre_filter_type = st.radio("More than one genre selected. Do you want recommendations for movies that fit all selected genres"
                                      "or any movie that fits any of the selected genres", ('Must fit all genres', 'Any of the selected genres'))
+        filters["genre_filter_type"] = genre_filter_type
 
 
     if st.button(button_label):
