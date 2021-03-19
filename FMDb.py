@@ -37,8 +37,6 @@ def initializeUsedIndexArray():
 
 def splitData(column, data):
     """
-    Due to data format inconsistencies across different columns in the csv file, this function will manually extract the
-    necessary data from the specified column until a suitable method is in place to make the data from each column uniform.
     Based on the column name passed to the function, the appropriate method of data extraction takes place, and a list
     containing the extracted data is returned
 
@@ -88,12 +86,11 @@ def initializeDecadesArray():
     decades[current_decade + "0s"] = []
 
     for _year in year:
-        if current_decade in str(_year):
-            decades[current_decade + "0s"].append(_year)
-        else:
+        if  not current_decade in str(_year):
             current_decade = str(_year)[:-1]
             decades[current_decade + "0s"] = []
-            decades[current_decade + "0s"].append(_year)
+
+        decades[current_decade + "0s"].append(_year)
 
 def getFilter(filter_key, filter_value, dataframe):
     """
@@ -120,9 +117,10 @@ def getFilter(filter_key, filter_value, dataframe):
 
 def mergeFilteredMovieList(filtered_movie_list, new_movie_list, key):
     """
-    Function to merge the filtered movie suggestion data frames. Genre concatenation will concatenate the two filtered
-    data frame objects by the intersection, whereas other concatenation will concatenate by the union. The logic here
-    is that you can have a movie of two different genres (Action Comedy) but not a movie from two different years.
+    Function to merge the filtered movie suggestion data frames. By default genre concatenation will concatenate the two
+    filtered data frame objects by the intersection, whereas other concatenation will concatenate by the union. The logic here
+    is that you can have a movie of two different genres (Action Comedy) but not a movie from two different years. However
+    users can choose to be recommended movies that fit either genres, when more than one genre is selected.
 
     :param key: the filter key to determine what type of concatenation will occur
     :param filtered_movie_list: the prime filtered data frame
@@ -184,6 +182,9 @@ def updateFilterOptionsDictionary():
 
     """
     global updated_filter_options_dictionary
+
+    updated_filter_options_dictionary.clear()
+
     for key in filters.keys():
         updated_filter_options_dictionary[key] = filters[key]
 
@@ -268,7 +269,9 @@ def displayRecommendation():
     print(recommendation)
 
     if len(recommendation) > 0:
-
+        st.write(str(used_index_array))
+        st.write(str(filters))
+        st.write(str(updated_filter_options_dictionary))
         # Title printed for image debug purposes
         st.write(recommendation.title)
 
@@ -303,7 +306,11 @@ def getRecommendation(movie_list):
     Function to get a data frame of movies to be recommended, including filters if applicable, which are stored within
     the filters dictionary. If there are filters present, a data frame is created for each filter condition, and all
     data frames are merged to create the final filtered data frame containing the movie suggestions. If no filters are
-    present, then a random index is produced from the unfiltered movie list
+    present, then a random index is produced from the unfiltered movie list.
+
+    If the combination of genres results in an empty data frame, then no other filters are checked, and an empty data
+    frame is returned. This is due to how the data frame merging implementation results in trying to intersect other
+    filter's data frames with an empty data frame, which leads to recommendations that do not fit the genres selected
 
     :param movie_list: a list of all movies
     :return: the recommended movie data
@@ -316,6 +323,11 @@ def getRecommendation(movie_list):
         print(str(filters))
 
         for key in filters:
+
+            if not key == "genre" and "genre" in filters.keys():
+                if len(filtered_movie_list) < 1:
+                    return pd.DataFrame()
+
             if (key == "genre" and genre_filter_type == "Must fit all genres") or key == "rating":
                 for filter_option in filters[key]:
 
