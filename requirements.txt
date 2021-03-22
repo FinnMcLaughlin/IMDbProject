@@ -1,0 +1,5 @@
+streamlit==0.72.0
+IMDBpy==2020.9.25
+pandas=1.1.5
+pillow==8.0.1
+urllib3==1.26.2
