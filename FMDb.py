@@ -130,7 +130,7 @@ def mergeFilteredMovieList(filtered_movie_list, new_movie_list, key):
     if len(filtered_movie_list.index) > 0:
         if key == "rating":
             return pd.concat([filtered_movie_list, new_movie_list], axis=1, join="inner")
-        elif key == "genre" and genre_filter_type == "Must fit all genres":
+        elif key == "genre" and filters["genre_filter_type"] == "Must fit all genres":
             return pd.concat([filtered_movie_list, new_movie_list], axis=1, join="inner")
         else:
             return pd.concat([filtered_movie_list, new_movie_list])
@@ -267,9 +267,6 @@ def displayRecommendation():
     recommendation = getRecommendation(movies)
 
     if len(recommendation) > 0:
-        st.write(str(used_index_array))
-        st.write(str(filters))
-        st.write(str(updated_filter_options_dictionary))
         # Title printed for image debug purposes
         st.write(recommendation.title)
 
@@ -326,7 +323,7 @@ def getRecommendation(movie_list):
                     if len(filtered_movie_list) < 1:
                         return pd.DataFrame()
 
-                if (key == "genre" and genre_filter_type == "Must fit all genres") or key == "rating":
+                if (key == "genre" and filters["genre_filter_type"] == "Must fit all genres") or key == "rating":
                     for filter_option in filters[key]:
 
                         filtered_movie_list = mergeFilteredMovieList(filtered_movie_list, getFilter(key, filter_option, movie_list), key).drop_duplicates()
@@ -448,12 +445,11 @@ if __name__ == "__main__":
             filters["rating"] = [st.slider("Minimum Rating", 0.0, 10.0, 0.0, 0.1, "%f")]
 
 
-    genre_filter_type = ""
-
     if "genre" in filters.keys() and len(filters["genre"]) > 1:
-        genre_filter_type = st.radio("More than one genre selected. Do you want recommendations for movies that fit all selected genres"
+        filters["genre_filter_type"] = st.radio("More than one genre selected. Do you want recommendations for movies that fit all selected genres"
                                      "or any movie that fits any of the selected genres", ('Must fit all genres', 'Any of the selected genres'))
-        filters["genre_filter_type"] = genre_filter_type
+    else:
+        filters["genre_filter_type"] = ""
 
 
     if st.button(button_label):
