@@ -297,7 +297,7 @@ def displayRecommendation():
         st.subheader(formatArrayToString(splitData("languages", recommendation.languages)))
     else:
         st.write("Unfortunately no movie from the list fits this criteria")
-        st.image("resources/no_rec_image.png", "Truly, a sad day", use_column_width=True)
+        st.image("resources/resource_images/no_rec_image.png", "Truly, a sad day", use_column_width=True)
 
 def getRecommendation(movie_list):
     """

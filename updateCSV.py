@@ -10,11 +10,11 @@ curr_directory_path = os.getcwd()
 last_updated_list_array = []
 
 CSV_file = "movie_info.csv"
-movie_list_file = "Movie_List.txt"
+movie_list_file = "resources/Movie_List.txt"
 #CSV_file = "temp_movie_info.csv"
 #movie_list_file = "temp_movie_list.txt"
 
-last_updated_list_file = "last_updated_list.txt"
+last_updated_list_file = "resources/last_updated_list.txt"
 
 def checkForUpdateInList(movie_title):
     """
