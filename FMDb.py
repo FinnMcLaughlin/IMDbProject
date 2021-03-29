@@ -4,6 +4,8 @@ from PIL import Image, ImageFile
 import random
 import os
 
+st.set_page_config(page_title="FMDb", page_icon=Image.open("resources/resource_images/icon.png"), initial_sidebar_state="expanded")
+
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 # Array for all filter options that will be displayed on sidebar
