@@ -3,10 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="dcca8038-aafb-4704-9488-9b3419004e9b" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/FMDb.py" afterPath="$PROJECT_DIR$/FMDb.py" />
-      <change beforePath="$PROJECT_DIR$/movie_info.csv" afterPath="$PROJECT_DIR$/movie_info.csv" />
+      <change beforePath="$PROJECT_DIR$/movie_posters/#/2001" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/movie_posters/S/Star Trek_.jpg" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/movie_posters/T/The Raid" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" afterPath="$PROJECT_DIR$/requirements.txt" />
       <change beforePath="$PROJECT_DIR$/resources/Movie_List.txt" afterPath="$PROJECT_DIR$/resources/Movie_List.txt" />
-      <change beforePath="$PROJECT_DIR$/resources/last_updated_list.txt" afterPath="$PROJECT_DIR$/resources/last_updated_list.txt" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -23,8 +24,8 @@
       <file leaf-file-name="FMDb.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/FMDb.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1450">
-              <caret line="451" column="41" lean-forward="true" selection-start-line="451" selection-start-column="41" selection-end-line="451" selection-end-column="41" />
+            <state relative-caret-position="1070">
+              <caret line="370" column="52" lean-forward="true" selection-start-line="370" selection-start-column="52" selection-end-line="370" selection-end-column="52" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
                 <element signature="e#614#876#0" expanded="false" />
@@ -42,9 +43,19 @@
                 <element signature="e#8598#8932#0" expanded="false" />
                 <element signature="e#8967#10290#0" expanded="false" />
                 <element signature="e#10331#13278#0" expanded="false" />
-                <element signature="e#13317#14143#0" expanded="false" />
                 <element signature="e#14186#14691#0" expanded="false" />
+                <element signature="e#14725#17387#0" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="requirements.txt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/requirements.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="17">
+              <caret line="20" column="10" lean-forward="false" selection-start-line="20" selection-start-column="10" selection-end-line="20" selection-end-column="10" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -52,8 +63,8 @@
       <file leaf-file-name="Movie_List.txt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/resources/Movie_List.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="226">
-              <caret line="120" column="10" lean-forward="true" selection-start-line="120" selection-start-column="10" selection-end-line="120" selection-end-column="10" />
+            <state relative-caret-position="2040">
+              <caret line="120" column="10" lean-forward="false" selection-start-line="120" selection-start-column="10" selection-end-line="120" selection-end-column="10" />
               <folding />
             </state>
           </provider>
@@ -62,7 +73,7 @@
       <file leaf-file-name="updateCSV.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/updateCSV.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-128">
+            <state relative-caret-position="170">
               <caret line="16" column="57" lean-forward="false" selection-start-line="16" selection-start-column="36" selection-end-line="16" selection-end-column="57" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
@@ -133,10 +144,10 @@
         <option value="$PROJECT_DIR$/temp_movie_list" />
         <option value="$PROJECT_DIR$/temp_movie_list.txt" />
         <option value="$PROJECT_DIR$/last_updated_list.txt" />
-        <option value="$PROJECT_DIR$/requirements.txt" />
         <option value="$PROJECT_DIR$/updateCSV.py" />
         <option value="$PROJECT_DIR$/resources/Movie_List.txt" />
         <option value="$PROJECT_DIR$/FMDb.py" />
+        <option value="$PROJECT_DIR$/requirements.txt" />
       </list>
     </option>
   </component>
@@ -162,7 +173,6 @@
     </navigator>
     <panes>
       <pane id="Scratches" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -173,12 +183,25 @@
             <path>
               <item name="IMDB_Project" type="b2602c69:ProjectViewProjectNode" />
               <item name="IMDB_Project" type="462c0819:PsiDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="movie_posters" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="IMDB_Project" type="b2602c69:ProjectViewProjectNode" />
+              <item name="IMDB_Project" type="462c0819:PsiDirectoryNode" />
+              <item name="movie_posters" type="462c0819:PsiDirectoryNode" />
+              <item name="#" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="IMDB_Project" type="b2602c69:ProjectViewProjectNode" />
+              <item name="IMDB_Project" type="462c0819:PsiDirectoryNode" />
+              <item name="movie_posters" type="462c0819:PsiDirectoryNode" />
+              <item name="T" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -354,47 +377,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/updateCSV.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/FMDb.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1445">
-          <caret line="85" column="0" lean-forward="false" selection-start-line="85" selection-start-column="0" selection-end-line="85" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-            <element signature="e#614#876#0" expanded="false" />
-            <element signature="e#911#1800#0" expanded="false" />
-            <element signature="e#1834#2204#0" expanded="false" />
-            <element signature="e#2240#2731#0" expanded="false" />
-            <element signature="e#2789#3540#0" expanded="false" />
-            <element signature="e#3616#4827#0" expanded="false" />
-            <element signature="e#4880#5819#0" expanded="false" />
-            <element signature="e#5862#6079#0" expanded="false" />
-            <element signature="e#6112#6233#0" expanded="false" />
-            <element signature="e#6276#6592#0" expanded="false" />
-            <element signature="e#6641#7251#0" expanded="false" />
-            <element signature="e#7287#8539#0" expanded="false" />
-            <element signature="e#8598#8932#0" expanded="false" />
-            <element signature="e#8967#10290#0" expanded="false" />
-            <element signature="e#10331#13278#0" expanded="false" />
-            <element signature="e#13317#14143#0" expanded="false" />
-            <element signature="e#14186#14691#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/updateCSV.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/FMDb.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="510">
@@ -416,8 +398,8 @@
             <element signature="e#8598#8932#0" expanded="false" />
             <element signature="e#8967#10290#0" expanded="false" />
             <element signature="e#10331#13278#0" expanded="false" />
-            <element signature="e#13317#14143#0" expanded="false" />
             <element signature="e#14186#14691#0" expanded="false" />
+            <element signature="e#14725#17387#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -450,8 +432,8 @@
             <element signature="e#8598#8932#0" expanded="false" />
             <element signature="e#8967#10290#0" expanded="false" />
             <element signature="e#10331#13278#0" expanded="false" />
-            <element signature="e#13317#14143#0" expanded="false" />
             <element signature="e#14186#14691#0" expanded="false" />
+            <element signature="e#14725#17387#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -484,8 +466,8 @@
             <element signature="e#8598#8932#0" expanded="false" />
             <element signature="e#8967#10290#0" expanded="false" />
             <element signature="e#10331#13278#0" expanded="false" />
-            <element signature="e#13317#14143#0" expanded="false" />
             <element signature="e#14186#14691#0" expanded="false" />
+            <element signature="e#14725#17387#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -518,8 +500,8 @@
             <element signature="e#8598#8932#0" expanded="false" />
             <element signature="e#8967#10290#0" expanded="false" />
             <element signature="e#10331#13278#0" expanded="false" />
-            <element signature="e#13317#14143#0" expanded="false" />
             <element signature="e#14186#14691#0" expanded="false" />
+            <element signature="e#14725#17387#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -552,8 +534,8 @@
             <element signature="e#8598#8932#0" expanded="false" />
             <element signature="e#8967#10290#0" expanded="false" />
             <element signature="e#10331#13278#0" expanded="false" />
-            <element signature="e#13317#14143#0" expanded="false" />
             <element signature="e#14186#14691#0" expanded="false" />
+            <element signature="e#14725#17387#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -586,8 +568,8 @@
             <element signature="e#8598#8932#0" expanded="false" />
             <element signature="e#8967#10290#0" expanded="false" />
             <element signature="e#10331#13278#0" expanded="false" />
-            <element signature="e#13317#14143#0" expanded="false" />
             <element signature="e#14186#14691#0" expanded="false" />
+            <element signature="e#14725#17387#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -714,7 +696,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
           <caret line="2" column="9" lean-forward="false" selection-start-line="2" selection-start-column="9" selection-end-line="2" selection-end-column="9" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -729,21 +710,12 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/requirements.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="15" lean-forward="false" selection-start-line="4" selection-start-column="15" selection-end-line="4" selection-end-column="15" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/updateCSV.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-128">
+        <state relative-caret-position="170">
           <caret line="16" column="57" lean-forward="false" selection-start-line="16" selection-start-column="36" selection-end-line="16" selection-end-column="57" />
           <folding>
             <element signature="e#0#21#0" expanded="true" />
@@ -763,16 +735,31 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/resources/Movie_List.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="226">
-          <caret line="120" column="10" lean-forward="true" selection-start-line="120" selection-start-column="10" selection-end-line="120" selection-end-column="10" />
+        <state relative-caret-position="2040">
+          <caret line="120" column="10" lean-forward="false" selection-start-line="120" selection-start-column="10" selection-end-line="120" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/movie_posters/S/Star Trek_.jpg" />
+    <entry file="file://$PROJECT_DIR$/movie_posters/S/Star Trek.jpg">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/requirements2.txt" />
+    <entry file="file://$PROJECT_DIR$/requirements.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="20" column="10" lean-forward="false" selection-start-line="20" selection-start-column="10" selection-end-line="20" selection-end-column="10" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/FMDb.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1450">
-          <caret line="451" column="41" lean-forward="true" selection-start-line="451" selection-start-column="41" selection-end-line="451" selection-end-column="41" />
+        <state relative-caret-position="1070">
+          <caret line="370" column="52" lean-forward="true" selection-start-line="370" selection-start-column="52" selection-end-line="370" selection-end-column="52" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
             <element signature="e#614#876#0" expanded="false" />
@@ -790,8 +777,8 @@
             <element signature="e#8598#8932#0" expanded="false" />
             <element signature="e#8967#10290#0" expanded="false" />
             <element signature="e#10331#13278#0" expanded="false" />
-            <element signature="e#13317#14143#0" expanded="false" />
             <element signature="e#14186#14691#0" expanded="false" />
+            <element signature="e#14725#17387#0" expanded="false" />
           </folding>
         </state>
       </provider>
