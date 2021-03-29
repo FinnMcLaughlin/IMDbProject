@@ -3,11 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="dcca8038-aafb-4704-9488-9b3419004e9b" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/movie_posters/#/2001" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/movie_posters/S/Star Trek_.jpg" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/movie_posters/T/The Raid" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" afterPath="$PROJECT_DIR$/requirements.txt" />
-      <change beforePath="$PROJECT_DIR$/resources/Movie_List.txt" afterPath="$PROJECT_DIR$/resources/Movie_List.txt" />
+      <change beforePath="$PROJECT_DIR$/FMDb.py" afterPath="$PROJECT_DIR$/FMDb.py" />
+      <change beforePath="$PROJECT_DIR$/updateCSV.py" afterPath="$PROJECT_DIR$/updateCSV.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -24,8 +21,8 @@
       <file leaf-file-name="FMDb.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/FMDb.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1070">
-              <caret line="370" column="52" lean-forward="true" selection-start-line="370" selection-start-column="52" selection-end-line="370" selection-end-column="52" />
+            <state relative-caret-position="356">
+              <caret line="278" column="46" lean-forward="true" selection-start-line="278" selection-start-column="46" selection-end-line="278" selection-end-column="46" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
                 <element signature="e#614#876#0" expanded="false" />
@@ -41,31 +38,10 @@
                 <element signature="e#6641#7251#0" expanded="false" />
                 <element signature="e#7287#8539#0" expanded="false" />
                 <element signature="e#8598#8932#0" expanded="false" />
-                <element signature="e#8967#10290#0" expanded="false" />
-                <element signature="e#10331#13278#0" expanded="false" />
-                <element signature="e#14186#14691#0" expanded="false" />
-                <element signature="e#14725#17387#0" expanded="false" />
+                <element signature="e#10348#13295#0" expanded="false" />
+                <element signature="e#14203#14708#0" expanded="false" />
+                <element signature="e#14742#17404#0" expanded="false" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="requirements.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/requirements.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="20" column="10" lean-forward="false" selection-start-line="20" selection-start-column="10" selection-end-line="20" selection-end-column="10" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Movie_List.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/resources/Movie_List.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2040">
-              <caret line="120" column="10" lean-forward="false" selection-start-line="120" selection-start-column="10" selection-end-line="120" selection-end-column="10" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -73,8 +49,8 @@
       <file leaf-file-name="updateCSV.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/updateCSV.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
-              <caret line="16" column="57" lean-forward="false" selection-start-line="16" selection-start-column="36" selection-end-line="16" selection-end-column="57" />
+            <state relative-caret-position="1105">
+              <caret line="160" column="0" lean-forward="true" selection-start-line="160" selection-start-column="0" selection-end-line="160" selection-end-column="0" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
                 <element signature="e#457#1016#0" expanded="false" />
@@ -83,10 +59,9 @@
                 <element signature="e#1958#2530#0" expanded="false" />
                 <element signature="e#2565#3590#0" expanded="false" />
                 <element signature="e#3646#3895#0" expanded="false" />
-                <element signature="e#3924#5767#0" expanded="false" />
-                <element signature="e#5802#7033#0" expanded="false" />
-                <element signature="e#7064#8712#0" expanded="false" />
-                <element signature="e#8768#9139#0" expanded="false" />
+                <element signature="e#5853#7084#0" expanded="false" />
+                <element signature="e#7115#8763#0" expanded="false" />
+                <element signature="e#8819#9190#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -144,10 +119,10 @@
         <option value="$PROJECT_DIR$/temp_movie_list" />
         <option value="$PROJECT_DIR$/temp_movie_list.txt" />
         <option value="$PROJECT_DIR$/last_updated_list.txt" />
-        <option value="$PROJECT_DIR$/updateCSV.py" />
         <option value="$PROJECT_DIR$/resources/Movie_List.txt" />
-        <option value="$PROJECT_DIR$/FMDb.py" />
         <option value="$PROJECT_DIR$/requirements.txt" />
+        <option value="$PROJECT_DIR$/updateCSV.py" />
+        <option value="$PROJECT_DIR$/FMDb.py" />
       </list>
     </option>
   </component>
@@ -179,23 +154,6 @@
             <path>
               <item name="IMDB_Project" type="b2602c69:ProjectViewProjectNode" />
               <item name="IMDB_Project" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="IMDB_Project" type="b2602c69:ProjectViewProjectNode" />
-              <item name="IMDB_Project" type="462c0819:PsiDirectoryNode" />
-              <item name="movie_posters" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="IMDB_Project" type="b2602c69:ProjectViewProjectNode" />
-              <item name="IMDB_Project" type="462c0819:PsiDirectoryNode" />
-              <item name="movie_posters" type="462c0819:PsiDirectoryNode" />
-              <item name="#" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="IMDB_Project" type="b2602c69:ProjectViewProjectNode" />
-              <item name="IMDB_Project" type="462c0819:PsiDirectoryNode" />
-              <item name="movie_posters" type="462c0819:PsiDirectoryNode" />
-              <item name="T" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -345,9 +303,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1845238" sideWeight="0.49342105" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.36235118" sideWeight="0.49342105" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32894737" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2993421" sideWeight="0.5119048" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32894737" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -372,7 +329,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="29" />
+      <option name="time" value="30" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -396,10 +353,9 @@
             <element signature="e#6641#7251#0" expanded="false" />
             <element signature="e#7287#8539#0" expanded="false" />
             <element signature="e#8598#8932#0" expanded="false" />
-            <element signature="e#8967#10290#0" expanded="false" />
-            <element signature="e#10331#13278#0" expanded="false" />
-            <element signature="e#14186#14691#0" expanded="false" />
-            <element signature="e#14725#17387#0" expanded="false" />
+            <element signature="e#10348#13295#0" expanded="false" />
+            <element signature="e#14203#14708#0" expanded="false" />
+            <element signature="e#14742#17404#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -430,10 +386,9 @@
             <element signature="e#6641#7251#0" expanded="false" />
             <element signature="e#7287#8539#0" expanded="false" />
             <element signature="e#8598#8932#0" expanded="false" />
-            <element signature="e#8967#10290#0" expanded="false" />
-            <element signature="e#10331#13278#0" expanded="false" />
-            <element signature="e#14186#14691#0" expanded="false" />
-            <element signature="e#14725#17387#0" expanded="false" />
+            <element signature="e#10348#13295#0" expanded="false" />
+            <element signature="e#14203#14708#0" expanded="false" />
+            <element signature="e#14742#17404#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -464,10 +419,9 @@
             <element signature="e#6641#7251#0" expanded="false" />
             <element signature="e#7287#8539#0" expanded="false" />
             <element signature="e#8598#8932#0" expanded="false" />
-            <element signature="e#8967#10290#0" expanded="false" />
-            <element signature="e#10331#13278#0" expanded="false" />
-            <element signature="e#14186#14691#0" expanded="false" />
-            <element signature="e#14725#17387#0" expanded="false" />
+            <element signature="e#10348#13295#0" expanded="false" />
+            <element signature="e#14203#14708#0" expanded="false" />
+            <element signature="e#14742#17404#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -498,10 +452,9 @@
             <element signature="e#6641#7251#0" expanded="false" />
             <element signature="e#7287#8539#0" expanded="false" />
             <element signature="e#8598#8932#0" expanded="false" />
-            <element signature="e#8967#10290#0" expanded="false" />
-            <element signature="e#10331#13278#0" expanded="false" />
-            <element signature="e#14186#14691#0" expanded="false" />
-            <element signature="e#14725#17387#0" expanded="false" />
+            <element signature="e#10348#13295#0" expanded="false" />
+            <element signature="e#14203#14708#0" expanded="false" />
+            <element signature="e#14742#17404#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -532,10 +485,9 @@
             <element signature="e#6641#7251#0" expanded="false" />
             <element signature="e#7287#8539#0" expanded="false" />
             <element signature="e#8598#8932#0" expanded="false" />
-            <element signature="e#8967#10290#0" expanded="false" />
-            <element signature="e#10331#13278#0" expanded="false" />
-            <element signature="e#14186#14691#0" expanded="false" />
-            <element signature="e#14725#17387#0" expanded="false" />
+            <element signature="e#10348#13295#0" expanded="false" />
+            <element signature="e#14203#14708#0" expanded="false" />
+            <element signature="e#14742#17404#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -566,10 +518,9 @@
             <element signature="e#6641#7251#0" expanded="false" />
             <element signature="e#7287#8539#0" expanded="false" />
             <element signature="e#8598#8932#0" expanded="false" />
-            <element signature="e#8967#10290#0" expanded="false" />
-            <element signature="e#10331#13278#0" expanded="false" />
-            <element signature="e#14186#14691#0" expanded="false" />
-            <element signature="e#14725#17387#0" expanded="false" />
+            <element signature="e#10348#13295#0" expanded="false" />
+            <element signature="e#14203#14708#0" expanded="false" />
+            <element signature="e#14742#17404#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -713,34 +664,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/updateCSV.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="16" column="57" lean-forward="false" selection-start-line="16" selection-start-column="36" selection-end-line="16" selection-end-column="57" />
-          <folding>
-            <element signature="e#0#21#0" expanded="true" />
-            <element signature="e#457#1016#0" expanded="false" />
-            <element signature="e#1067#1520#0" expanded="false" />
-            <element signature="e#1571#1913#0" expanded="false" />
-            <element signature="e#1958#2530#0" expanded="false" />
-            <element signature="e#2565#3590#0" expanded="false" />
-            <element signature="e#3646#3895#0" expanded="false" />
-            <element signature="e#3924#5767#0" expanded="false" />
-            <element signature="e#5802#7033#0" expanded="false" />
-            <element signature="e#7064#8712#0" expanded="false" />
-            <element signature="e#8768#9139#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/Movie_List.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2040">
-          <caret line="120" column="10" lean-forward="false" selection-start-line="120" selection-start-column="10" selection-end-line="120" selection-end-column="10" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/movie_posters/S/Star Trek_.jpg" />
     <entry file="file://$PROJECT_DIR$/movie_posters/S/Star Trek.jpg">
       <provider selected="true" editor-type-id="images">
@@ -756,10 +679,37 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/resources/Movie_List.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="549">
+          <caret line="120" column="10" lean-forward="false" selection-start-line="120" selection-start-column="10" selection-end-line="120" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/updateCSV.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1105">
+          <caret line="160" column="0" lean-forward="true" selection-start-line="160" selection-start-column="0" selection-end-line="160" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+            <element signature="e#457#1016#0" expanded="false" />
+            <element signature="e#1067#1520#0" expanded="false" />
+            <element signature="e#1571#1913#0" expanded="false" />
+            <element signature="e#1958#2530#0" expanded="false" />
+            <element signature="e#2565#3590#0" expanded="false" />
+            <element signature="e#3646#3895#0" expanded="false" />
+            <element signature="e#5853#7084#0" expanded="false" />
+            <element signature="e#7115#8763#0" expanded="false" />
+            <element signature="e#8819#9190#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/FMDb.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1070">
-          <caret line="370" column="52" lean-forward="true" selection-start-line="370" selection-start-column="52" selection-end-line="370" selection-end-column="52" />
+        <state relative-caret-position="356">
+          <caret line="278" column="46" lean-forward="true" selection-start-line="278" selection-start-column="46" selection-end-line="278" selection-end-column="46" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
             <element signature="e#614#876#0" expanded="false" />
@@ -775,10 +725,9 @@
             <element signature="e#6641#7251#0" expanded="false" />
             <element signature="e#7287#8539#0" expanded="false" />
             <element signature="e#8598#8932#0" expanded="false" />
-            <element signature="e#8967#10290#0" expanded="false" />
-            <element signature="e#10331#13278#0" expanded="false" />
-            <element signature="e#14186#14691#0" expanded="false" />
-            <element signature="e#14725#17387#0" expanded="false" />
+            <element signature="e#10348#13295#0" expanded="false" />
+            <element signature="e#14203#14708#0" expanded="false" />
+            <element signature="e#14742#17404#0" expanded="false" />
           </folding>
         </state>
       </provider>

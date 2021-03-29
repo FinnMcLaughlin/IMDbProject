@@ -270,7 +270,7 @@ def displayRecommendation():
         # Title printed for image debug purposes
         st.write(recommendation.title)
 
-        st.image(getMoviePoster(recommendation.title), "Poster for " + recommendation.title, use_column_width=True)
+        st.image(getMoviePoster(recommendation.title.replace(":", "")), "Poster for " + recommendation.title, use_column_width=True)
 
         st.header("Title")
         st.subheader(recommendation.title)

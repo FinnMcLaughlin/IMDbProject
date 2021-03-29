@@ -153,11 +153,11 @@ def getMovies(movies):
                 print("Title Reverted")
                 imdb_movie["title"] = getMovieTitleFromIndex(index)
 
-            if not checkPosterIsPresent(imdb_movie["title"]):
+            if not checkPosterIsPresent(imdb_movie["title"].replace(":", "")):
                 if imdb_movie["title"][0].isdigit():
-                    folder_path = "movie_posters\#\\" + imdb_movie["title"] + ".jpg"
+                    folder_path = "movie_posters\#\\" + imdb_movie["title"].replace(":", "") + ".jpg"
                 else:
-                    folder_path = "movie_posters\\" + imdb_movie["title"][0].upper() + "\\" + imdb_movie["title"] + ".jpg"
+                    folder_path = "movie_posters\\" + imdb_movie["title"][0].upper() + "\\" + imdb_movie["title"].replace(":", "") + ".jpg"
 
                 urllib.request.urlretrieve(imdb.helpers.fullSizeCoverURL(imdb_movie), folder_path)
 
